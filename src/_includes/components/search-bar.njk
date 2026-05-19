@@ -1,0 +1,23 @@
+<div class="search-bar-wrapper">
+  <div class="search-bar">
+    <span class="search-prefix">></span>
+    <input
+      type="search"
+      id="{{ inputId if inputId else 'search-input' }}"
+      class="search-input"
+      placeholder="{{ placeholder if placeholder else 'rechercher...' }}"
+      autocomplete="off"
+      spellcheck="false"
+      aria-label="Recherche"
+    />
+    <span class="search-cursor" aria-hidden="true">_</span>
+  </div>
+  {% if showFilters %}
+  <div class="filter-bar" id="filter-bar" role="group" aria-label="Filtres">
+    <button class="filter-btn active" data-filter="all">tous</button>
+    <button class="filter-btn" data-filter="debutant">👶 débutant</button>
+    <button class="filter-btn" data-filter="avance">🧠 avancé</button>
+    <button class="filter-btn" data-filter="expert">⚡ expert</button>
+  </div>
+  {% endif %}
+</div>

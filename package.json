@@ -1,12 +1,18 @@
 {
-  "name": "nexus-fr",
+  "name": "nexusfr",
   "version": "1.0.0",
-  "description": "Bibliothèque FR ultra-sélective d'outils et guides tech",
+  "description": "Bibliothèque FR ultra-sélective d'outils et guides pour utilisateurs tech",
+  "type": "module",
   "scripts": {
-    "build": "eleventy",
-    "dev": "eleventy --serve"
+    "build": "npx @11ty/eleventy",
+    "start": "npx @11ty/eleventy --serve",
+    "dev": "npx @11ty/eleventy --serve --watch"
   },
-  "devDependencies": {
-    "@11ty/eleventy": "^3.1.5"
+  "dependencies": {
+    "@11ty/eleventy": "^3.0.0",
+    "@11ty/eleventy-plugin-syntaxhighlight": "^5.0.0"
+  },
+  "engines": {
+    "node": ">=20"
   }
 }

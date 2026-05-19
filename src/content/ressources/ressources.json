@@ -1,0 +1,5 @@
+{
+  "layout": "layouts/page.njk",
+  "permalink": false,
+  "draft": false
+}

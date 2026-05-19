@@ -1,58 +1,43 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>{% if title %}{{ title }} — {% endif %}{{ site.title }}</title>
-  <meta name="description" content="{{ description or site.description }}">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="{{ '/assets/css/main.css' | url }}">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#0a0a0a" />
+
+  <title>{% if title %}{{ title }} — {{ site.title }}{% else %}{{ site.title }} — {{ site.description | truncate(60) }}{% endif %}</title>
+  <meta name="description" content="{% if description %}{{ description }}{% else %}{{ site.description }}{% endif %}" />
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="{% if title %}{{ title }} — {{ site.title }}{% else %}{{ site.title }}{% endif %}" />
+  <meta property="og:description" content="{% if description %}{{ description }}{% else %}{{ site.description }}{% endif %}" />
+  <meta property="og:url" content="{{ site.url }}{{ page.url }}" />
+
+  <!-- Canonical -->
+  <link rel="canonical" href="{{ site.url }}{{ page.url }}" />
+
+  <!-- Sitemap -->
+  <link rel="sitemap" type="application/xml" href="/sitemap.xml" />
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="/assets/css/main.css" />
+
+  {% block head %}{% endblock %}
 </head>
 <body>
+  {% include "components/header.njk" %}
 
-  <header class="site-header">
-    <div class="container">
-      <a href="{{ '/' | url }}" class="logo">
-        <span class="logo-bracket">[</span>NEXUS<span class="logo-accent">.FR</span><span class="logo-bracket">]</span>
-      </a>
-      <nav class="main-nav">
-        <a href="{{ '/categories/streaming/' | url }}" class="nav-link">streaming</a>
-        <a href="{{ '/categories/download/' | url }}" class="nav-link">download</a>
-        <a href="{{ '/categories/tools/' | url }}" class="nav-link">outils</a>
-        <a href="{{ '/guides/' | url }}" class="nav-link">guides</a>
-      </nav>
-      <button class="search-toggle" aria-label="Rechercher">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
-      </button>
-    </div>
-    <div class="search-bar" id="searchBar">
-      <div class="container">
-        <input type="search" id="searchInput" placeholder="Chercher un outil, un guide..." autocomplete="off" spellcheck="false">
-        <div class="search-results" id="searchResults"></div>
-      </div>
-    </div>
-  </header>
-
-  <main class="site-main">
-    {{ content | safe }}
+  <main id="main-content">
+    {% block content %}
+      {{ content | safe }}
+    {% endblock %}
   </main>
 
-  <footer class="site-footer">
-    <div class="container">
-      <div class="footer-left">
-        <span class="footer-logo">NEXUS.FR</span>
-        <span class="footer-meta">v{{ site.version }} — mis à jour {{ site.updated }}</span>
-      </div>
-      <div class="footer-right">
-        <span class="footer-note">Bibliothèque FR ultra-sélective. Qualité &gt; quantité.</span>
-      </div>
-    </div>
-  </footer>
+  {% include "components/footer.njk" %}
 
-  <script>window.BASE_PATH = "{{ '/' | url | trim('/') }}";</script>
-  <script src="{{ '/assets/js/search.js' | url }}"></script>
-  <script src="{{ '/assets/js/main.js' | url }}"></script>
+  <!-- JS -->
+  <script src="/assets/js/main.js" defer></script>
+  {% block scripts %}{% endblock %}
 </body>
 </html>

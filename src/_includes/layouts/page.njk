@@ -1,0 +1,15 @@
+{% extends "layouts/base.njk" %}
+
+{% block content %}
+<div class="page-wrapper">
+  <div class="page-header">
+    <h1 class="page-title"><span class="accent">//</span> {{ title }}</h1>
+    {% if description %}
+    <p class="page-description">{{ description }}</p>
+    {% endif %}
+  </div>
+  <div class="page-content prose">
+    {{ content | safe }}
+  </div>
+</div>
+{% endblock %}

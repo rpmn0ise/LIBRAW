@@ -1,0 +1,20 @@
+---
+layout: layouts/base.njk
+title: "404 — Page introuvable"
+description: "Cette page n'existe pas."
+permalink: /404.html
+---
+
+<div class="error-page">
+  <div class="error-code">> ERROR 404</div>
+  <h1 class="error-title">Page introuvable</h1>
+  <p class="error-message">Cette ressource n'existe pas ou a été déplacée.</p>
+  <p class="error-prompt">
+    <span>$</span> nexusfr --find --redirect home
+  </p>
+  <div class="error-links">
+    <a href="/" class="error-link primary">← accueil</a>
+    <a href="/guides/" class="error-link">guides</a>
+    <a href="/categories/outils/" class="error-link">outils</a>
+  </div>
+</div>

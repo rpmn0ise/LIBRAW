@@ -1,7 +1,49 @@
 {
-  "title": "NEXUS.FR",
-  "description": "Bibliothèque ultra-sélective d'outils et guides pour utilisateurs tech francophones.",
-  "url": "https://nexus-fr.github.io",
-  "version": "1.0",
-  "updated": "04/2026"
+  "title": "NexusFR",
+  "description": "Bibliothèque FR ultra-sélective d'outils et guides pour utilisateurs tech. Streaming, download, privacy, émulation — sélection vérifiée manuellement.",
+  "url": "https://nexusfr.pages.dev",
+  "github": "https://github.com/rpmn0ise/NexusFR",
+  "author": "RPMN0ISE",
+  "authorUrl": "https://rpmn0ise.github.io",
+  "version": "2.0.0",
+  "nav": [
+    { "label": "streaming", "url": "/categories/streaming/" },
+    { "label": "download", "url": "/categories/download/" },
+    { "label": "outils", "url": "/categories/outils/" },
+    { "label": "privacy", "url": "/categories/privacy/" },
+    { "label": "émulation", "url": "/categories/emulation/" },
+    { "label": "guides", "url": "/guides/" }
+  ],
+  "categories": [
+    {
+      "slug": "streaming",
+      "label": "Streaming",
+      "emoji": "📺",
+      "description": "Films, séries, anime en streaming direct"
+    },
+    {
+      "slug": "download",
+      "label": "Download",
+      "emoji": "⬇️",
+      "description": "Torrents, DDL, archives, ebooks"
+    },
+    {
+      "slug": "outils",
+      "label": "Outils",
+      "emoji": "🔧",
+      "description": "Logiciels, extensions, utilitaires"
+    },
+    {
+      "slug": "privacy",
+      "label": "Privacy",
+      "emoji": "🔒",
+      "description": "VPN, navigateurs, anonymat"
+    },
+    {
+      "slug": "emulation",
+      "label": "Émulation",
+      "emoji": "🎮",
+      "description": "Émulateurs, ROMs, consoles"
+    }
+  ]
 }

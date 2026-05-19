@@ -1,0 +1,20 @@
+<header class="site-header" role="banner">
+  <div class="header-inner">
+    <a href="/" class="site-logo" aria-label="{{ site.title }} — accueil">
+      <span class="logo-bracket">[</span><span class="logo-name">NEXUS.FR</span><span class="logo-bracket">]</span>
+    </a>
+
+    <nav class="site-nav" role="navigation" aria-label="Navigation principale">
+      <button class="nav-toggle" id="nav-toggle" aria-expanded="false" aria-controls="nav-menu" aria-label="Menu">
+        <span class="nav-toggle-icon"></span>
+      </button>
+      <ul class="nav-list" id="nav-menu" role="list">
+        {% for item in site.nav %}
+        <li class="nav-item">
+          <a href="{{ item.url }}" class="nav-link{% if page.url == item.url %} active{% elif page.url.startsWith(item.url) and item.url != '/' %} active{% endif %}">{{ item.label }}</a>
+        </li>
+        {% endfor %}
+      </ul>
+    </nav>
+  </div>
+</header>

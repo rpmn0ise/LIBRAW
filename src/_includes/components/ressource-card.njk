@@ -1,0 +1,42 @@
+{% macro ressourceCard(item) %}
+<article class="ressource-card" data-title="{{ item.data.title | lower }}" data-description="{{ item.data.description | lower }}" data-categorie="{{ item.data.categorie }}" data-niveau="{{ item.data.niveau }}">
+  <div class="card-header">
+    <div class="card-title-row">
+      <a href="{{ item.data.url }}" class="card-title" target="_blank" rel="noopener noreferrer">{{ item.data.title }}</a>
+      {% if item.data.verifie %}
+      <span class="badge-verif" title="Vérifié {{ item.data.date_verif }}">✅ {{ item.data.date_verif }}</span>
+      {% endif %}
+    </div>
+    {% if item.data.badges and item.data.badges.length %}
+    <div class="card-badges">
+      {% for badge in item.data.badges %}
+      <span class="card-badge">{{ badge }}</span>
+      {% endfor %}
+    </div>
+    {% endif %}
+  </div>
+
+  <p class="card-description">{{ item.data.description }}</p>
+
+  <div class="card-footer">
+    <div class="card-meta">
+      {% if item.data.niveau %}
+      <span class="niveau-badge {{ item.data.niveau | niveauClass }}">{{ item.data.niveau | niveauLabel }}</span>
+      {% endif %}
+      {% if item.data.tags and item.data.tags.length %}
+      <div class="card-tags">
+        {% for tag in item.data.tags | limit(3) %}
+        <span class="tag">{{ tag }}</span>
+        {% endfor %}
+      </div>
+      {% endif %}
+    </div>
+    <div class="card-actions">
+      {% if item.data.guide %}
+      <a href="{{ item.data.guide }}" class="card-guide-link">guide →</a>
+      {% endif %}
+      <a href="{{ item.data.url }}" class="card-external-link" target="_blank" rel="noopener noreferrer">visiter ↗</a>
+    </div>
+  </div>
+</article>
+{% endmacro %}

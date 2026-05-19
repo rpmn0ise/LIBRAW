@@ -1,0 +1,24 @@
+{% macro guideCard(guide) %}
+<article class="guide-card">
+  <div class="guide-card-header">
+    <span class="niveau-badge {{ guide.data.niveau | niveauClass }}">{{ guide.data.niveau | niveauLabel }}</span>
+    <span class="guide-card-cat">{{ guide.data.categorie | categorieLabel }}</span>
+  </div>
+  <h3 class="guide-card-title">
+    <a href="{{ guide.url }}" class="guide-card-link">{{ guide.data.title }}</a>
+  </h3>
+  {% if guide.data.description %}
+  <p class="guide-card-description">{{ guide.data.description }}</p>
+  {% endif %}
+  <div class="guide-card-footer">
+    {% if guide.data.tags and guide.data.tags.length %}
+    <div class="card-tags">
+      {% for tag in guide.data.tags | limit(3) %}
+      <span class="tag">{{ tag }}</span>
+      {% endfor %}
+    </div>
+    {% endif %}
+    <a href="{{ guide.url }}" class="guide-card-cta">lire →</a>
+  </div>
+</article>
+{% endmacro %}

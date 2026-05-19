@@ -1,34 +1,106 @@
----
-layout: layouts/base.njk
----
+{% extends "layouts/base.njk" %}
 
-<div class="container">
-<div class="guide-page">
+{% block content %}
+<div class="guide-wrapper">
+  <div class="guide-sidebar">
+    <div class="guide-meta-box">
+      <div class="meta-item">
+        <span class="meta-label">niveau</span>
+        <span class="niveau-badge {{ niveau | niveauClass }}">{{ niveau | niveauLabel }}</span>
+      </div>
+      <div class="meta-item">
+        <span class="meta-label">catégorie</span>
+        <span class="meta-value">{{ categorie | categorieLabel }}</span>
+      </div>
+      {% if date %}
+      <div class="meta-item">
+        <span class="meta-label">publié</span>
+        <span class="meta-value">{{ date | dateFormat }}</span>
+      </div>
+      {% endif %}
+      {% if tags and tags.length %}
+      <div class="meta-item">
+        <span class="meta-label">tags</span>
+        <div class="tag-list">
+          {% for tag in tags %}
+          <span class="tag">{{ tag }}</span>
+          {% endfor %}
+        </div>
+      </div>
+      {% endif %}
+    </div>
 
-  <div class="breadcrumb" style="padding-top:40px;">
-    <a href="{{ '/' | url }}">nexus.fr</a>
-    <span class="breadcrumb-sep">/</span>
-    <a href="{{ '/guides/' | url }}">guides</a>
-    <span class="breadcrumb-sep">/</span>
-    <span>{{ title }}</span>
+    <nav class="toc-nav" id="toc" aria-label="Table des matières">
+      <div class="toc-title">// contenu</div>
+      <div class="toc-links" id="toc-links">
+        <!-- Populated by JS -->
+      </div>
+    </nav>
+
+    <a href="/guides/" class="back-link">← retour aux guides</a>
   </div>
 
-  <div style="margin-top:24px; margin-bottom:32px; padding-bottom:24px; border-bottom:1px solid var(--border);">
-    <div style="font-family:var(--font-mono);font-size:0.75rem;color:var(--accent);margin-bottom:8px;letter-spacing:0.1em;text-transform:uppercase;">
-      // guide — {{ category or "général" }}
-    </div>
-    <h1 style="font-size:clamp(1.4rem,4vw,2rem);font-weight:800;letter-spacing:-0.02em;margin-bottom:8px;">{{ title }}</h1>
-    {% if description %}
-      <p style="color:var(--text-muted);font-size:0.9rem;">{{ description }}</p>
-    {% endif %}
-    <div style="display:flex;gap:12px;margin-top:12px;flex-wrap:wrap;">
-      {% if level %}<span style="font-size:0.8rem;color:var(--text-dim);">{{ level }}</span>{% endif %}
-      {% if readtime %}<span style="font-family:var(--font-mono);font-size:0.7rem;color:var(--text-dim);">~{{ readtime }}</span>{% endif %}
-      {% if updated %}<span style="font-family:var(--font-mono);font-size:0.7rem;color:var(--text-dim);">mis à jour : {{ updated }}</span>{% endif %}
-    </div>
-  </div>
+  <article class="guide-content prose">
+    <header class="guide-header">
+      <div class="guide-header-meta">
+        <span class="niveau-badge {{ niveau | niveauClass }}">{{ niveau | niveauLabel }}</span>
+        <span class="guide-cat">{{ categorie | categorieLabel }}</span>
+      </div>
+      <h1 class="guide-title">{{ title }}</h1>
+      {% if description %}
+      <p class="guide-description">{{ description }}</p>
+      {% endif %}
+    </header>
 
-  {{ content | safe }}
+    <div class="guide-body" id="guide-body">
+      {{ content | safe }}
+    </div>
+  </article>
+</div>
+{% endblock %}
 
-</div>
-</div>
+{% block scripts %}
+<script>
+  // Build TOC from guide headings
+  document.addEventListener("DOMContentLoaded", () => {
+    const body = document.getElementById("guide-body");
+    const tocLinks = document.getElementById("toc-links");
+    if (!body || !tocLinks) return;
+
+    const headings = body.querySelectorAll("h2, h3");
+    if (headings.length === 0) {
+      document.getElementById("toc").style.display = "none";
+      return;
+    }
+
+    headings.forEach((h) => {
+      // Ensure anchor ID
+      if (!h.id) {
+        h.id = h.textContent
+          .toLowerCase()
+          .normalize("NFD")
+          .replace(/[\u0300-\u036f]/g, "")
+          .replace(/[^a-z0-9]+/g, "-")
+          .replace(/(^-|-$)/g, "");
+      }
+      const a = document.createElement("a");
+      a.href = `#${h.id}`;
+      a.textContent = h.textContent;
+      a.className = `toc-link toc-${h.tagName.toLowerCase()}`;
+      tocLinks.appendChild(a);
+    });
+
+    // Highlight active section on scroll
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          const link = tocLinks.querySelector(`a[href="#${entry.target.id}"]`);
+          if (link) link.classList.toggle("active", entry.isIntersecting);
+        });
+      },
+      { rootMargin: "0px 0px -70% 0px" }
+    );
+    headings.forEach((h) => observer.observe(h));
+  });
+</script>
+{% endblock %}

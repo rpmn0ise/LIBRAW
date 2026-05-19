@@ -1,0 +1,134 @@
+---
+layout: layouts/base.njk
+title: false
+description: "Bibliothèque FR ultra-sélective d'outils et guides pour utilisateurs tech. Streaming, download, privacy, émulation — sélection vérifiée manuellement."
+permalink: /
+---
+
+{# ─── Hero ──────────────────────────────────────────────────────── #}
+<section class="hero">
+  <h1 class="hero-title">
+    <span class="line-white">La bibliothèque FR</span>
+    <span class="line-green">qui ne bullshite pas.</span>
+  </h1>
+  <p class="hero-tagline">
+    Outils vérifiés manuellement. Guides directs. Aucun sponsor, aucune pub, aucun annuaire gonflé à l'air.
+  </p>
+  <div class="hero-stats">
+    <span class="hero-stat"><strong>{{ collections.ressources | length }}</strong> ressources</span>
+    <span class="hero-stat-sep"></span>
+    <span class="hero-stat"><strong>{{ site.categories | length }}</strong> catégories</span>
+    <span class="hero-stat-sep"></span>
+    <span class="hero-stat"><strong>{{ collections.guides | length }}</strong> guides</span>
+    <span class="hero-stat-sep"></span>
+    <span class="hero-stat">màj <strong>{{ env.buildDate }}</strong></span>
+  </div>
+</section>
+
+{# ─── Catégories ────────────────────────────────────────────────── #}
+<section class="section">
+  <div class="section-header">
+    <div>
+      <div class="section-title"><span class="prefix">//</span> catégories</div>
+      <div class="section-subtitle">Accès rapide</div>
+    </div>
+  </div>
+
+  <div class="cat-grid">
+    {% for cat in site.categories %}
+    {% set catCount = collections["ressources_" + cat.slug] | length %}
+    <a href="/categories/{{ cat.slug }}/" class="cat-card">
+      <span class="cat-emoji">{{ cat.emoji }}</span>
+      <span class="cat-name">{{ cat.label }}</span>
+      <span class="cat-desc">{{ cat.description }}</span>
+      <span class="cat-count">{{ catCount }} ressource{% if catCount > 1 %}s{% endif %}</span>
+    </a>
+    {% endfor %}
+  </div>
+</section>
+
+{# ─── Featured ressources ───────────────────────────────────────── #}
+<section class="section">
+  <div class="section-header">
+    <div>
+      <div class="section-title"><span class="prefix">//</span> essentiels</div>
+      <div class="section-subtitle">Sélection immédiate</div>
+    </div>
+    <span class="section-count">{{ collections.ressourcesFeatured | length }} ressources</span>
+  </div>
+
+  <div class="ressource-grid">
+    {% for item in collections.ressourcesFeatured %}
+    <article class="ressource-card" data-title="{{ item.data.title | lower }}" data-description="{{ item.data.description | lower }}" data-categorie="{{ item.data.categorie }}" data-niveau="{{ item.data.niveau }}">
+      <div class="card-header">
+        <div class="card-title-row">
+          <a href="{{ item.data.url }}" class="card-title" target="_blank" rel="noopener noreferrer">{{ item.data.title }}</a>
+          {% if item.data.verifie %}
+          <span class="badge-verif" title="Vérifié {{ item.data.date_verif }}">✅ {{ item.data.date_verif }}</span>
+          {% endif %}
+        </div>
+        {% if item.data.badges and item.data.badges.length %}
+        <div class="card-badges">
+          {% for badge in item.data.badges %}<span class="card-badge">{{ badge }}</span>{% endfor %}
+        </div>
+        {% endif %}
+      </div>
+      <p class="card-description">{{ item.data.description }}</p>
+      <div class="card-footer">
+        <div class="card-meta">
+          {% if item.data.niveau %}
+          <span class="niveau-badge {{ item.data.niveau | niveauClass }}">{{ item.data.niveau | niveauLabel }}</span>
+          {% endif %}
+          {% if item.data.tags and item.data.tags.length %}
+          <div class="card-tags">
+            {% for tag in item.data.tags | limit(3) %}<span class="tag">{{ tag }}</span>{% endfor %}
+          </div>
+          {% endif %}
+        </div>
+        <div class="card-actions">
+          {% if item.data.guide %}
+          <a href="{{ item.data.guide }}" class="card-guide-link">guide →</a>
+          {% endif %}
+          <a href="{{ item.data.url }}" class="card-external-link" target="_blank" rel="noopener noreferrer">visiter ↗</a>
+        </div>
+      </div>
+    </article>
+    {% endfor %}
+  </div>
+</section>
+
+{# ─── Guides récents ────────────────────────────────────────────── #}
+<section class="section">
+  <div class="section-header">
+    <div>
+      <div class="section-title"><span class="prefix">//</span> guides récents</div>
+      <div class="section-subtitle">Guides pratiques</div>
+    </div>
+    <a href="/guides/" class="section-count" style="color: var(--accent); text-decoration: none;">voir tous →</a>
+  </div>
+
+  <div class="guide-grid">
+    {% for guide in collections.guidesFeatured %}
+    <article class="guide-card">
+      <div class="guide-card-header">
+        <span class="niveau-badge {{ guide.data.niveau | niveauClass }}">{{ guide.data.niveau | niveauLabel }}</span>
+        <span class="guide-card-cat">{{ guide.data.categorie | categorieLabel }}</span>
+      </div>
+      <h3 class="guide-card-title">
+        <a href="{{ guide.url }}" class="guide-card-link">{{ guide.data.title }}</a>
+      </h3>
+      {% if guide.data.description %}
+      <p class="guide-card-description">{{ guide.data.description }}</p>
+      {% endif %}
+      <div class="guide-card-footer">
+        {% if guide.data.tags and guide.data.tags.length %}
+        <div class="card-tags">
+          {% for tag in guide.data.tags | limit(3) %}<span class="tag">{{ tag }}</span>{% endfor %}
+        </div>
+        {% endif %}
+        <a href="{{ guide.url }}" class="guide-card-cta">lire →</a>
+      </div>
+    </article>
+    {% endfor %}
+  </div>
+</section>

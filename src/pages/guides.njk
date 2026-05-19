@@ -1,0 +1,58 @@
+---
+layout: layouts/base.njk
+title: "Guides"
+description: "Guides pratiques sur le torrent, la privacy, l'émulation, les outils — en français, sans bullshit."
+permalink: /guides/
+---
+
+<div class="guides-page-wrapper">
+  <div class="guides-page-header">
+    <h1 class="page-title"><span class="accent">//</span> guides</h1>
+    <p class="page-description">{{ description }}</p>
+  </div>
+
+  <div class="search-bar-wrapper">
+    <div class="search-bar">
+      <span class="search-prefix">></span>
+      <input type="search" id="search-input" class="search-input" placeholder="rechercher un guide..." autocomplete="off" spellcheck="false" aria-label="Recherche" />
+      <span class="search-cursor" aria-hidden="true">_</span>
+    </div>
+
+    <div class="filter-bar" role="group" aria-label="Filtrer par niveau">
+      <span class="guides-filter-label">niveau :</span>
+      <button class="filter-btn active" data-niveau="all">tous</button>
+      <button class="filter-btn" data-niveau="debutant">👶 débutant</button>
+      <button class="filter-btn" data-niveau="avance">🧠 avancé</button>
+      <button class="filter-btn" data-niveau="expert">⚡ expert</button>
+    </div>
+  </div>
+
+  <div class="guide-grid" id="guides-list">
+    {% for guide in collections.guides %}
+    <article class="guide-card" data-niveau="{{ guide.data.niveau }}" data-categorie="{{ guide.data.categorie }}">
+      <div class="guide-card-header">
+        <span class="niveau-badge {{ guide.data.niveau | niveauClass }}">{{ guide.data.niveau | niveauLabel }}</span>
+        <span class="guide-card-cat">{{ guide.data.categorie | categorieLabel }}</span>
+      </div>
+      <h2 class="guide-card-title" style="font-size: 0.95rem;">
+        <a href="{{ guide.url }}" class="guide-card-link">{{ guide.data.title }}</a>
+      </h2>
+      {% if guide.data.description %}
+      <p class="guide-card-description">{{ guide.data.description }}</p>
+      {% endif %}
+      <div class="guide-card-footer">
+        {% if guide.data.tags and guide.data.tags.length %}
+        <div class="card-tags">
+          {% for tag in guide.data.tags | limit(3) %}<span class="tag">{{ tag }}</span>{% endfor %}
+        </div>
+        {% endif %}
+        <a href="{{ guide.url }}" class="guide-card-cta">lire →</a>
+      </div>
+    </article>
+    {% endfor %}
+  </div>
+
+  <div class="no-results" role="status">
+    <span class="accent">></span> aucun guide trouvé — essaie un autre terme ou filtre
+  </div>
+</div>
