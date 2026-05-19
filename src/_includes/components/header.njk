@@ -11,7 +11,7 @@
       <ul class="nav-list" id="nav-menu" role="list">
         {% for item in site.nav %}
         <li class="nav-item">
-          <a href="{{ item.url }}" class="nav-link{% if page.url == item.url %} active{% elif page.url.startsWith(item.url) and item.url != '/' %} active{% endif %}">{{ item.label }}</a>
+          <a href="{{ item.url }}" class="nav-link{% if page.url == item.url %} active{% elif page.url and page.url.startsWith(item.url) and item.url != '/' %} active{% endif %}">{{ item.label }}</a>
         </li>
         {% endfor %}
       </ul>
