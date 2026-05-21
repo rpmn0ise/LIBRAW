@@ -1,5 +1,5 @@
 /* ═══════════════════════════════════════════════════════════════
-   NEXUSFR — main.js
+   LIBRAW — main.js
    Recherche client-side, filtres niveau, nav mobile
    ═══════════════════════════════════════════════════════════════ */
 
