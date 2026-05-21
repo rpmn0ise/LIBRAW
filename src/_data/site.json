@@ -12,7 +12,8 @@
     { "label": "outils", "url": "/categories/outils/" },
     { "label": "privacy", "url": "/categories/privacy/" },
     { "label": "émulation", "url": "/categories/emulation/" },
-    { "label": "guides", "url": "/guides/" }
+    { "label": "guides", "url": "/guides/" },
+    { "label": "+ générer", "url": "/generator/" }
   ],
   "categories": [
     {
