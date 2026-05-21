@@ -1,0 +1,446 @@
+---
+layout: layouts/base.njk
+title: "Générateur"
+description: "Générateur de fichiers Markdown pour ressources et guides LIBRAW."
+permalink: /generator/
+---
+
+<div class="gen-wrapper">
+
+  <div class="gen-header">
+    <div class="gen-title-row">
+      <span class="prefix">//</span>
+      <h1 class="gen-title">générateur</h1>
+    </div>
+    <p class="gen-subtitle">Crée des fichiers Markdown prêts à coller dans le repo.</p>
+  </div>
+
+  {# ─── Mode switcher ──────────────────────────────────────────── #}
+  <div class="gen-mode-bar">
+    <button class="gen-mode-btn active" data-mode="ressource" id="btn-ressource">
+      <span class="mode-icon">🔧</span> ressource
+    </button>
+    <button class="gen-mode-btn" data-mode="guide" id="btn-guide">
+      <span class="mode-icon">📖</span> guide
+    </button>
+  </div>
+
+  <div class="gen-body">
+
+    {# ─── Formulaire ─────────────────────────────────────────────── #}
+    <div class="gen-form-col">
+
+      {# ══ RESSOURCE FORM ══ #}
+      <form class="gen-form" id="form-ressource" autocomplete="off">
+
+        <div class="form-group">
+          <label class="form-label" for="r-title">title <span class="req">*</span></label>
+          <input class="form-input" id="r-title" type="text" placeholder="uBlock Origin" />
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="r-description">description <span class="req">*</span></label>
+          <textarea class="form-input form-textarea" id="r-description" rows="2" placeholder="Le bloqueur de pub le plus efficace. Open-source..."></textarea>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="r-url">url <span class="req">*</span></label>
+          <input class="form-input" id="r-url" type="url" placeholder="https://ublockorigin.com" />
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label" for="r-categorie">catégorie <span class="req">*</span></label>
+            <select class="form-input form-select" id="r-categorie">
+              <option value="outils">🔧 outils</option>
+              <option value="streaming">📺 streaming</option>
+              <option value="download">⬇️ download</option>
+              <option value="privacy">🔒 privacy</option>
+              <option value="emulation">🎮 émulation</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="r-niveau">niveau <span class="req">*</span></label>
+            <select class="form-input form-select" id="r-niveau">
+              <option value="debutant">👶 débutant</option>
+              <option value="avance">🧠 avancé</option>
+              <option value="expert">⚡ expert</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label" for="r-date-verif">date vérif</label>
+            <input class="form-input" id="r-date-verif" type="text" placeholder="05/2026" maxlength="7" />
+          </div>
+
+          <div class="form-group form-group--check">
+            <label class="form-label">options</label>
+            <div class="check-row">
+              <label class="check-label">
+                <input type="checkbox" id="r-verifie" checked />
+                <span>vérifié</span>
+              </label>
+              <label class="check-label">
+                <input type="checkbox" id="r-featured" />
+                <span>featured</span>
+              </label>
+              <label class="check-label">
+                <input type="checkbox" id="r-draft" />
+                <span>draft</span>
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="r-tags">tags <span class="hint">(séparés par des virgules)</span></label>
+          <input class="form-input" id="r-tags" type="text" placeholder="extension, adblock, navigateur" />
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="r-badges">badges <span class="hint">(emojis séparés par des espaces)</span></label>
+          <input class="form-input" id="r-badges" type="text" placeholder="⚡ 🧠" />
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="r-guide">lien guide <span class="hint">(optionnel)</span></label>
+          <input class="form-input" id="r-guide" type="text" placeholder="/guides/guide-ublock/" />
+        </div>
+
+      </form>
+
+      {# ══ GUIDE FORM ══ #}
+      <form class="gen-form hidden" id="form-guide" autocomplete="off">
+
+        <div class="form-group">
+          <label class="form-label" for="g-title">title <span class="req">*</span></label>
+          <input class="form-input" id="g-title" type="text" placeholder="uBlock Origin : config optimale" />
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="g-description">description <span class="req">*</span></label>
+          <textarea class="form-input form-textarea" id="g-description" rows="2" placeholder="Installation, listes de filtres, mode avancé..."></textarea>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label" for="g-date">date <span class="req">*</span></label>
+            <input class="form-input" id="g-date" type="date" />
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="g-categorie">catégorie <span class="req">*</span></label>
+            <select class="form-input form-select" id="g-categorie">
+              <option value="outils">🔧 outils</option>
+              <option value="streaming">📺 streaming</option>
+              <option value="download">⬇️ download</option>
+              <option value="privacy">🔒 privacy</option>
+              <option value="emulation">🎮 émulation</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label" for="g-niveau">niveau <span class="req">*</span></label>
+            <select class="form-input form-select" id="g-niveau">
+              <option value="debutant">👶 débutant</option>
+              <option value="avance">🧠 avancé</option>
+              <option value="expert">⚡ expert</option>
+            </select>
+          </div>
+
+          <div class="form-group form-group--check">
+            <label class="form-label">draft</label>
+            <div class="check-row">
+              <label class="check-label">
+                <input type="checkbox" id="g-draft" />
+                <span>draft</span>
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="g-tags">tags <span class="hint">(séparés par des virgules)</span></label>
+          <input class="form-input" id="g-tags" type="text" placeholder="ublock, adblock, privacy, navigateur" />
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="g-body">contenu Markdown <span class="hint">(optionnel — squelette généré si vide)</span></label>
+          <textarea class="form-input form-textarea form-textarea--lg" id="g-body" rows="10" placeholder="## Pourquoi X&#10;&#10;Contenu ici..."></textarea>
+        </div>
+
+      </form>
+
+      <div class="gen-filename-row">
+        <span class="gen-filename-label">// fichier</span>
+        <span class="gen-filename-value" id="gen-filename">—</span>
+      </div>
+
+    </div>
+
+    {# ─── Aperçu ──────────────────────────────────────────────── #}
+    <div class="gen-preview-col">
+
+      <div class="gen-preview-header">
+        <span class="gen-preview-label">// aperçu markdown</span>
+        <button class="gen-copy-btn" id="gen-copy-btn" title="Copier le Markdown">
+          <span id="copy-icon">⎘</span> <span id="copy-text">copier</span>
+        </button>
+      </div>
+
+      <div class="gen-preview-split">
+        <pre class="gen-code-block" id="gen-output"><code id="gen-code">— remplis le formulaire</code></pre>
+
+        <div class="gen-card-preview" id="gen-card-preview">
+          <div class="preview-label">// rendu carte</div>
+          <div id="card-preview-inner">
+            <p class="preview-empty">— aperçu disponible après saisie</p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+</div>
+
+{% block scripts %}
+<script>
+(function () {
+  // ─── État ────────────────────────────────────────────────────────────────
+  let mode = 'ressource';
+
+  // ─── DOM refs ────────────────────────────────────────────────────────────
+  const btnRessource   = document.getElementById('btn-ressource');
+  const btnGuide       = document.getElementById('btn-guide');
+  const formRessource  = document.getElementById('form-ressource');
+  const formGuide      = document.getElementById('form-guide');
+  const genOutput      = document.getElementById('gen-code');
+  const genFilename    = document.getElementById('gen-filename');
+  const copyBtn        = document.getElementById('gen-copy-btn');
+  const copyText       = document.getElementById('copy-text');
+  const cardPreview    = document.getElementById('card-preview-inner');
+
+  // ─── Helpers ─────────────────────────────────────────────────────────────
+  function val(id) {
+    const el = document.getElementById(id);
+    if (!el) return '';
+    return el.value.trim();
+  }
+  function checked(id) {
+    const el = document.getElementById(id);
+    return el ? el.checked : false;
+  }
+  function slugify(str) {
+    return str.toLowerCase()
+      .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+      .replace(/[^a-z0-9]+/g, '-')
+      .replace(/(^-|-$)/g, '');
+  }
+  function parseTags(str) {
+    return str.split(',').map(t => t.trim()).filter(Boolean);
+  }
+  function parseBadges(str) {
+    return str.split(' ').map(t => t.trim()).filter(Boolean);
+  }
+  function todayISO() {
+    return new Date().toISOString().slice(0, 10);
+  }
+  function niveauLabel(n) {
+    const m = { debutant: '👶 débutant', avance: '🧠 avancé', expert: '⚡ expert' };
+    return m[n] || n;
+  }
+  function niveauClass(n) {
+    const m = { debutant: 'niveau-debutant', avance: 'niveau-avance', expert: 'niveau-expert' };
+    return m[n] || '';
+  }
+  function catLabel(c) {
+    const m = { streaming: '📺 Streaming', download: '⬇️ Download', outils: '🔧 Outils', privacy: '🔒 Privacy', emulation: '🎮 Émulation' };
+    return m[c] || c;
+  }
+
+  // ─── Génération Markdown ─────────────────────────────────────────────────
+  function buildRessource() {
+    const title      = val('r-title');
+    const desc       = val('r-description');
+    const url        = val('r-url');
+    const cat        = val('r-categorie');
+    const niveau     = val('r-niveau');
+    const dateVerif  = val('r-date-verif');
+    const verifie    = checked('r-verifie');
+    const featured   = checked('r-featured');
+    const draft      = checked('r-draft');
+    const tags       = parseTags(val('r-tags'));
+    const badges     = parseBadges(val('r-badges'));
+    const guide      = val('r-guide');
+
+    const tagsYaml   = tags.length ? '\ntags:\n' + tags.map(t => `  - ${t}`).join('\n') : '';
+    const badgesYaml = badges.length ? '\nbadges:\n' + badges.map(b => `  - ${b}`).join('\n') : '';
+    const guideYaml  = guide ? `\nguide: ${guide}` : '';
+    const verifYaml  = verifie ? `\nverifie: true\ndate_verif: "${dateVerif || todayISO().slice(0, 7).replace('-', '/')}"` : '';
+
+    return `---
+title: "${title || 'Titre'}"
+description: "${desc || 'Description.'}"
+url: "${url || 'https://'}"
+categorie: ${cat}${tagsYaml}
+niveau: ${niveau}${verifYaml}
+featured: ${featured}${badgesYaml}${guideYaml}
+draft: ${draft}
+---`;
+  }
+
+  function buildGuide() {
+    const title  = val('g-title');
+    const desc   = val('g-description');
+    const date   = val('g-date') || todayISO();
+    const cat    = val('g-categorie');
+    const niveau = val('g-niveau');
+    const draft  = checked('g-draft');
+    const tags   = parseTags(val('g-tags'));
+    const body   = val('g-body');
+
+    const tagsYaml = tags.length ? '\ntags:\n' + tags.map(t => `  - ${t}`).join('\n') : '';
+
+    const defaultBody = `\n## Pourquoi ${title || 'ce guide existe'}\n\nExplique ici le contexte.\n\n## Installation\n\n\`\`\`bash\n# commande ici\n\`\`\`\n\n## Configuration\n\nDétails de config.\n\n## Ce que ça ne fait pas\n\nLimites.`;
+
+    return `---
+title: "${title || 'Titre'}"
+description: "${desc || 'Description.'}"
+date: ${date}
+categorie: ${cat}
+niveau: ${niveau}${tagsYaml}
+draft: ${draft}
+---
+${body || defaultBody}`;
+  }
+
+  // ─── Aperçu carte ressource ───────────────────────────────────────────────
+  function renderCardRessource() {
+    const title    = val('r-title') || '—';
+    const desc     = val('r-description') || '—';
+    const url      = val('r-url') || '#';
+    const niveau   = val('r-niveau');
+    const cat      = val('r-categorie');
+    const tags     = parseTags(val('r-tags')).slice(0, 3);
+    const badges   = parseBadges(val('r-badges'));
+    const verifie  = checked('r-verifie');
+    const dv       = val('r-date-verif');
+    const guide    = val('r-guide');
+    const featured = checked('r-featured');
+
+    const badgesHtml = badges.map(b => `<span class="card-badge">${b}</span>`).join('');
+    const tagsHtml   = tags.map(t => `<span class="tag">${t}</span>`).join('');
+    const verifHtml  = verifie ? `<span class="badge-verif" title="Vérifié">✅ ${dv || '—'}</span>` : '';
+    const guideHtml  = guide ? `<a href="${guide}" class="card-guide-link">guide →</a>` : '';
+    const featBadge  = featured ? `<span class="gen-featured-badge">★ featured</span>` : '';
+
+    return `
+      ${featBadge}
+      <article class="ressource-card" style="margin:0">
+        <div class="card-header">
+          <div class="card-title-row">
+            <a href="${url}" class="card-title" target="_blank" rel="noopener noreferrer">${title}</a>
+            ${verifHtml}
+          </div>
+          ${badgesHtml ? `<div class="card-badges">${badgesHtml}</div>` : ''}
+        </div>
+        <p class="card-description">${desc}</p>
+        <div class="card-footer">
+          <div class="card-meta">
+            <span class="niveau-badge ${niveauClass(niveau)}">${niveauLabel(niveau)}</span>
+            ${tagsHtml ? `<div class="card-tags">${tagsHtml}</div>` : ''}
+          </div>
+          <div class="card-actions">
+            ${guideHtml}
+            <a href="${url}" class="card-external-link" target="_blank" rel="noopener noreferrer">visiter ↗</a>
+          </div>
+        </div>
+      </article>`;
+  }
+
+  // ─── Aperçu carte guide ───────────────────────────────────────────────────
+  function renderCardGuide() {
+    const title  = val('g-title') || '—';
+    const desc   = val('g-description') || '—';
+    const niveau = val('g-niveau');
+    const cat    = val('g-categorie');
+    const tags   = parseTags(val('g-tags')).slice(0, 3);
+    const tagsHtml = tags.map(t => `<span class="tag">${t}</span>`).join('');
+
+    return `
+      <article class="guide-card" style="margin:0">
+        <div class="guide-card-header">
+          <span class="niveau-badge ${niveauClass(niveau)}">${niveauLabel(niveau)}</span>
+          <span class="guide-card-cat">${catLabel(cat)}</span>
+        </div>
+        <h3 class="guide-card-title">
+          <a href="#" class="guide-card-link">${title}</a>
+        </h3>
+        <p class="guide-card-description">${desc}</p>
+        <div class="guide-card-footer">
+          ${tagsHtml ? `<div class="card-tags">${tagsHtml}</div>` : ''}
+          <a href="#" class="guide-card-cta">lire →</a>
+        </div>
+      </article>`;
+  }
+
+  // ─── Nom de fichier ──────────────────────────────────────────────────────
+  function getFilename() {
+    const t = mode === 'ressource' ? val('r-title') : val('g-title');
+    if (!t) return '—';
+    const prefix = mode === 'guide' ? 'guide-' : '';
+    return prefix + slugify(t) + '.md';
+  }
+
+  // ─── Mise à jour ─────────────────────────────────────────────────────────
+  function update() {
+    const md = mode === 'ressource' ? buildRessource() : buildGuide();
+    genOutput.textContent = md;
+    genFilename.textContent = getFilename();
+    cardPreview.innerHTML = mode === 'ressource' ? renderCardRessource() : renderCardGuide();
+  }
+
+  // ─── Mode switch ─────────────────────────────────────────────────────────
+  function setMode(m) {
+    mode = m;
+    btnRessource.classList.toggle('active', m === 'ressource');
+    btnGuide.classList.toggle('active', m === 'guide');
+    formRessource.classList.toggle('hidden', m !== 'ressource');
+    formGuide.classList.toggle('hidden', m !== 'guide');
+    update();
+  }
+
+  btnRessource.addEventListener('click', () => setMode('ressource'));
+  btnGuide.addEventListener('click', () => setMode('guide'));
+
+  // ─── Écoute des inputs ────────────────────────────────────────────────────
+  document.querySelectorAll('.gen-form input, .gen-form select, .gen-form textarea').forEach(el => {
+    el.addEventListener('input', update);
+    el.addEventListener('change', update);
+  });
+
+  // ─── Copier ───────────────────────────────────────────────────────────────
+  copyBtn.addEventListener('click', () => {
+    const md = mode === 'ressource' ? buildRessource() : buildGuide();
+    navigator.clipboard.writeText(md).then(() => {
+      copyText.textContent = 'copié !';
+      copyBtn.classList.add('copied');
+      setTimeout(() => {
+        copyText.textContent = 'copier';
+        copyBtn.classList.remove('copied');
+      }, 2000);
+    });
+  });
+
+  // ─── Init ─────────────────────────────────────────────────────────────────
+  document.getElementById('g-date').value = todayISO();
+  update();
+})();
+</script>
+{% endblock %}
