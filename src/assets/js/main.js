@@ -1,82 +1,75 @@
 /* ═══════════════════════════════════════════════════════════════
-   LIBRAW — main.js
-   Recherche client-side, filtres niveau, nav mobile
+   LIBRAW — main.js v3.0
    ═══════════════════════════════════════════════════════════════ */
 
 document.addEventListener("DOMContentLoaded", () => {
-  initNav();
+  initMobileNav();
   initSearch();
   initFilters();
   initNiveauFilters();
+  initTOC();
+  initGlobalSearch();
 });
 
-/* ─── Mobile nav ──────────────────────────────────────────────── */
-function initNav() {
+/* ─── Mobile nav (sidebar toggle) ───────────────────────────── */
+function initMobileNav() {
   const toggle = document.getElementById("nav-toggle");
-  const menu = document.getElementById("nav-menu");
-  if (!toggle || !menu) return;
+  const sidebar = document.getElementById("site-sidebar");
+  if (!toggle || !sidebar) return;
 
   toggle.addEventListener("click", () => {
-    const isOpen = menu.classList.toggle("open");
+    const isOpen = sidebar.classList.toggle("open");
     toggle.setAttribute("aria-expanded", String(isOpen));
   });
 
-  // Close on outside click
   document.addEventListener("click", (e) => {
-    if (!toggle.contains(e.target) && !menu.contains(e.target)) {
-      menu.classList.remove("open");
+    if (!toggle.contains(e.target) && !sidebar.contains(e.target)) {
+      sidebar.classList.remove("open");
       toggle.setAttribute("aria-expanded", "false");
     }
   });
 }
 
-/* ─── Search ──────────────────────────────────────────────────── */
+/* ─── Search (cat pages, row-based) ──────────────────────────── */
 function initSearch() {
   const input = document.getElementById("search-input");
   if (!input) return;
 
-  const cards = document.querySelectorAll(".ressource-card, .guide-card");
+  const rows = document.querySelectorAll(".ressource-row");
   const noResults = document.querySelector(".no-results");
+  if (!rows.length) return;
 
   input.addEventListener("input", () => {
     const q = input.value.toLowerCase().trim();
     let visible = 0;
 
-    cards.forEach((card) => {
-      if (card.classList.contains("filter-hidden")) return;
-
-      const title = (card.dataset.title || card.querySelector(".card-title, .guide-card-link")?.textContent || "").toLowerCase();
-      const desc = (card.dataset.description || card.querySelector(".card-description, .guide-card-description")?.textContent || "").toLowerCase();
-      const cat = (card.dataset.categorie || "").toLowerCase();
-      const tags = Array.from(card.querySelectorAll(".tag")).map((t) => t.textContent.toLowerCase()).join(" ");
-
+    rows.forEach((row) => {
+      if (row.classList.contains("filter-hidden")) return;
+      const title = (row.dataset.title || "").toLowerCase();
+      const desc = (row.dataset.description || "").toLowerCase();
+      const cat = (row.dataset.categorie || "").toLowerCase();
+      const tags = Array.from(row.querySelectorAll(".tag"))
+        .map((t) => t.textContent.toLowerCase()).join(" ");
       const match = !q || title.includes(q) || desc.includes(q) || cat.includes(q) || tags.includes(q);
-
-      card.classList.toggle("hidden", !match);
+      row.classList.toggle("hidden", !match);
       if (match) visible++;
     });
 
-    if (noResults) {
-      noResults.classList.toggle("visible", visible === 0 && q.length > 0);
-    }
+    if (noResults) noResults.classList.toggle("visible", visible === 0 && q.length > 0);
   });
 }
 
-/* ─── Category filters (categorie page) ──────────────────────── */
+/* ─── Filter buttons (niveau on cat pages) ───────────────────── */
 function initFilters() {
-  const filterBar = document.getElementById("filter-bar");
+  const filterBar = document.querySelector(".filter-bar");
   if (!filterBar) return;
 
-  const btns = filterBar.querySelectorAll(".filter-btn[data-filter]");
+  const btns = document.querySelectorAll(".filter-btn[data-filter]");
   if (!btns.length) return;
 
-  const isNiveauFilter = Array.from(btns).some((b) =>
-    ["debutant", "avance", "expert", "all"].includes(b.dataset.filter)
-  );
-  if (isNiveauFilter) return; // Handled by initNiveauFilters
-
-  const cards = document.querySelectorAll(".ressource-card");
+  const rows = document.querySelectorAll(".ressource-row");
   const noResults = document.querySelector(".no-results");
+  const searchInput = document.getElementById("search-input");
 
   btns.forEach((btn) => {
     btn.addEventListener("click", () => {
@@ -84,80 +77,127 @@ function initFilters() {
       btn.classList.add("active");
 
       const f = btn.dataset.filter;
+      const q = searchInput ? searchInput.value.toLowerCase().trim() : "";
       let visible = 0;
 
-      cards.forEach((card) => {
-        const match = f === "all" || card.dataset.categorie === f;
-        card.classList.toggle("filter-hidden", !match);
-        card.classList.toggle("hidden", !match);
-        if (match) visible++;
+      rows.forEach((row) => {
+        const niveauMatch = f === "all" || row.dataset.niveau === f;
+        const title = (row.dataset.title || "").toLowerCase();
+        const desc = (row.dataset.description || "").toLowerCase();
+        const searchMatch = !q || title.includes(q) || desc.includes(q);
+        const show = niveauMatch && searchMatch;
+        row.classList.toggle("filter-hidden", !niveauMatch);
+        row.classList.toggle("hidden", !show);
+        if (show) visible++;
       });
 
-      if (noResults) {
-        noResults.classList.toggle("visible", visible === 0);
-      }
+      if (noResults) noResults.classList.toggle("visible", visible === 0);
     });
   });
 }
 
-/* ─── Niveau filters (guides page) ───────────────────────────── */
+/* ─── Niveau + catégorie filters (guides page) ───────────────── */
 function initNiveauFilters() {
-  const filterBtns = document.querySelectorAll(".filter-btn[data-niveau]");
-  if (!filterBtns.length) return;
+  const niveauBtns = document.querySelectorAll(".filter-btn[data-niveau]");
+  const catBtns = document.querySelectorAll(".filter-btn[data-categorie]");
+  if (!niveauBtns.length) return;
 
-  const cards = document.querySelectorAll(".guide-card");
+  const rows = document.querySelectorAll(".guide-row");
   const noResults = document.querySelector(".no-results");
   const searchInput = document.getElementById("search-input");
 
-  function applyFilters() {
+  function apply() {
     const activeNiveau = document.querySelector(".filter-btn[data-niveau].active")?.dataset.niveau || "all";
     const activeCategorie = document.querySelector(".filter-btn[data-categorie].active")?.dataset.categorie || "all";
     const q = searchInput ? searchInput.value.toLowerCase().trim() : "";
-
     let visible = 0;
 
-    cards.forEach((card) => {
-      const niveauMatch = activeNiveau === "all" || card.dataset.niveau === activeNiveau;
-      const catMatch = activeCategorie === "all" || card.dataset.categorie === activeCategorie;
-
-      const title = (card.querySelector(".guide-card-link")?.textContent || "").toLowerCase();
-      const desc = (card.querySelector(".guide-card-description")?.textContent || "").toLowerCase();
+    rows.forEach((row) => {
+      const niveauMatch = activeNiveau === "all" || row.dataset.niveau === activeNiveau;
+      const catMatch = activeCategorie === "all" || row.dataset.categorie === activeCategorie;
+      const title = (row.querySelector(".guide-row-title")?.textContent || "").toLowerCase();
+      const desc = (row.querySelector(".guide-row-desc")?.textContent || "").toLowerCase();
       const searchMatch = !q || title.includes(q) || desc.includes(q);
-
       const show = niveauMatch && catMatch && searchMatch;
-      card.classList.toggle("hidden", !show);
+      row.classList.toggle("hidden", !show);
       if (show) visible++;
     });
 
-    if (noResults) {
-      noResults.classList.toggle("visible", visible === 0);
-    }
+    if (noResults) noResults.classList.toggle("visible", visible === 0);
   }
 
-  filterBtns.forEach((btn) => {
+  niveauBtns.forEach((btn) => {
     btn.addEventListener("click", () => {
-      const group = btn.dataset.niveau !== undefined ? "[data-niveau]" : "[data-categorie]";
-      document.querySelectorAll(`.filter-btn${group}`).forEach((b) => b.classList.remove("active"));
+      niveauBtns.forEach((b) => b.classList.remove("active"));
       btn.classList.add("active");
-      applyFilters();
+      apply();
     });
   });
 
-  const catBtns = document.querySelectorAll(".filter-btn[data-categorie]");
   catBtns.forEach((btn) => {
     btn.addEventListener("click", () => {
       catBtns.forEach((b) => b.classList.remove("active"));
       btn.classList.add("active");
-      applyFilters();
+      apply();
     });
   });
 
-  if (searchInput) {
-    searchInput.addEventListener("input", applyFilters);
-  }
+  if (searchInput) searchInput.addEventListener("input", apply);
 }
 
-/* ─── Smooth anchor scroll ────────────────────────────────────── */
+/* ─── Guide TOC ──────────────────────────────────────────────── */
+function initTOC() {
+  const body = document.getElementById("guide-body");
+  const tocLinks = document.getElementById("toc-links");
+  if (!body || !tocLinks) return;
+
+  const headings = body.querySelectorAll("h2, h3");
+  if (headings.length === 0) {
+    document.getElementById("toc")?.style.setProperty("display", "none");
+    return;
+  }
+
+  headings.forEach((h) => {
+    if (!h.id) {
+      h.id = h.textContent.toLowerCase()
+        .normalize("NFD").replace(/[\u0300-\u036f]/g, "")
+        .replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
+    }
+    const a = document.createElement("a");
+    a.href = `#${h.id}`;
+    a.textContent = h.textContent;
+    a.className = `toc-link toc-${h.tagName.toLowerCase()}`;
+    tocLinks.appendChild(a);
+  });
+
+  const observer = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        const link = tocLinks.querySelector(`a[href="#${entry.target.id}"]`);
+        if (link) link.classList.toggle("active", entry.isIntersecting);
+      });
+    },
+    { rootMargin: "0px 0px -70% 0px" }
+  );
+  headings.forEach((h) => observer.observe(h));
+}
+
+/* ─── Global search (header) — Ctrl+K focus ─────────────────── */
+function initGlobalSearch() {
+  const input = document.getElementById("global-search");
+  if (!input) return;
+
+  document.addEventListener("keydown", (e) => {
+    if ((e.ctrlKey || e.metaKey) && e.key === "k") {
+      e.preventDefault();
+      input.focus();
+      input.select();
+    }
+    if (e.key === "Escape") input.blur();
+  });
+}
+
+/* ─── Smooth anchor scroll ───────────────────────────────────── */
 document.querySelectorAll('a[href^="#"]').forEach((a) => {
   a.addEventListener("click", (e) => {
     const id = a.getAttribute("href").slice(1);

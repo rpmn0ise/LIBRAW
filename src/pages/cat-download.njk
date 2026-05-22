@@ -19,37 +19,48 @@ categorie: download
   <div class="search-bar-wrapper">
     <div class="search-bar">
       <span class="search-prefix">></span>
-      <input type="search" id="search-input" class="search-input" placeholder="rechercher dans download..." autocomplete="off" spellcheck="false" aria-label="Recherche" />
+      <input type="search" id="search-input" class="search-input" placeholder="rechercher dans download..." autocomplete="off" spellcheck="false" />
       <span class="search-cursor" aria-hidden="true">_</span>
+    </div>
+    <div class="filter-bar">
+      <span class="filter-label">niveau :</span>
+      <button class="filter-btn active" data-filter="all">tous</button>
+      <button class="filter-btn" data-filter="debutant">👶 débutant</button>
+      <button class="filter-btn" data-filter="avance">🧠 avancé</button>
+      <button class="filter-btn" data-filter="expert">⚡ expert</button>
     </div>
   </div>
 
-  <div class="ressource-grid">
+  <div class="ressource-list" id="ressource-list">
     {% for item in collections.ressources_download %}
-    <article class="ressource-card" data-title="{{ item.data.title | lower }}" data-description="{{ item.data.description | lower }}" data-categorie="{{ item.data.categorie }}" data-niveau="{{ item.data.niveau }}">
-      <div class="card-header">
-        <div class="card-title-row">
-          <a href="{{ item.data.url }}" class="card-title" target="_blank" rel="noopener noreferrer">{{ item.data.title }}</a>
-          {% if item.data.verifie %}<span class="badge-verif">✅ {{ item.data.date_verif }}</span>{% endif %}
-        </div>
-        {% if item.data.badges and item.data.badges.length %}
-        <div class="card-badges">{% for badge in item.data.badges %}<span class="card-badge">{{ badge }}</span>{% endfor %}</div>
+    <div class="ressource-row"
+         data-title="{{ item.data.title | lower }}"
+         data-description="{{ item.data.description | lower }}"
+         data-categorie="{{ item.data.categorie }}"
+         data-niveau="{{ item.data.niveau }}">
+      {% if item.data.badges and item.data.badges.length %}
+      <span class="row-badge">{{ item.data.badges[0] }}</span>
+      {% endif %}
+      <div class="row-main">
+        <a href="{{ item.data.url }}" class="row-title" target="_blank" rel="noopener noreferrer">{{ item.data.title }}</a>
+        <span class="row-desc">{{ item.data.description }}</span>
+      </div>
+      <div class="row-tags">
+        {% if item.data.niveau %}
+        <span class="niveau-badge {{ item.data.niveau | niveauClass }}">{{ item.data.niveau | niveauLabel }}</span>
+        {% endif %}
+        {% if item.data.tags %}
+          {% for tag in item.data.tags | limit(2) %}<span class="tag">{{ tag }}</span>{% endfor %}
         {% endif %}
       </div>
-      <p class="card-description">{{ item.data.description }}</p>
-      <div class="card-footer">
-        <div class="card-meta">
-          {% if item.data.niveau %}<span class="niveau-badge {{ item.data.niveau | niveauClass }}">{{ item.data.niveau | niveauLabel }}</span>{% endif %}
-          {% if item.data.tags and item.data.tags.length %}
-          <div class="card-tags">{% for tag in item.data.tags | limit(3) %}<span class="tag">{{ tag }}</span>{% endfor %}</div>
-          {% endif %}
-        </div>
-        <div class="card-actions">
-          {% if item.data.guide %}<a href="{{ item.data.guide }}" class="card-guide-link">guide →</a>{% endif %}
-          <a href="{{ item.data.url }}" class="card-external-link" target="_blank" rel="noopener noreferrer">visiter ↗</a>
-        </div>
+      <div class="row-meta">
+        {% if item.data.verifie %}<span class="row-verif">✅ {{ item.data.date_verif }}</span>{% endif %}
       </div>
-    </article>
+      <div class="row-actions">
+        {% if item.data.guide %}<a href="{{ item.data.guide }}" class="row-link">guide →</a>{% endif %}
+        <a href="{{ item.data.url }}" class="row-link primary" target="_blank" rel="noopener noreferrer">visiter ↗</a>
+      </div>
+    </div>
     {% endfor %}
   </div>
   <div class="no-results" role="status"><span class="accent">></span> aucune ressource trouvée</div>

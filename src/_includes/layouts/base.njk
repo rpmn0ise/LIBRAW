@@ -3,40 +3,38 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="theme-color" content="#0a0a0a" />
+  <meta name="theme-color" content="#0f1117" />
 
   <title>{% if title %}{{ title }} — {{ site.title }}{% else %}{{ site.title }} — {{ site.description | truncate(60) }}{% endif %}</title>
   <meta name="description" content="{% if description %}{{ description }}{% else %}{{ site.description }}{% endif %}" />
 
-  <!-- Open Graph -->
   <meta property="og:type" content="website" />
   <meta property="og:title" content="{% if title %}{{ title }} — {{ site.title }}{% else %}{{ site.title }}{% endif %}" />
   <meta property="og:description" content="{% if description %}{{ description }}{% else %}{{ site.description }}{% endif %}" />
   <meta property="og:url" content="{{ site.url }}{{ page.url }}" />
 
-  <!-- Canonical -->
   <link rel="canonical" href="{{ site.url }}{{ page.url }}" />
-
-  <!-- Sitemap -->
   <link rel="sitemap" type="application/xml" href="/sitemap.xml" />
-
-  <!-- CSS -->
   <link rel="stylesheet" href="/assets/css/main.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 
   {% block head %}{% endblock %}
 </head>
 <body>
   {% include "components/header.njk" %}
 
-  <main id="main-content">
-    {% block content %}
-      {{ content | safe }}
-    {% endblock %}
-  </main>
+  <div class="app-shell">
+    {% include "components/sidebar.njk" %}
+    <main id="main-content" class="main-content">
+      {% block content %}
+        {{ content | safe }}
+      {% endblock %}
 
-  {% include "components/footer.njk" %}
+      {% include "components/footer.njk" %}
+    </main>
+  </div>
 
-  <!-- JS -->
   <script src="/assets/js/main.js" defer></script>
   {% block scripts %}{% endblock %}
 </body>

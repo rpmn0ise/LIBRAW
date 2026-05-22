@@ -7,52 +7,55 @@ permalink: /guides/
 
 <div class="guides-page-wrapper">
   <div class="guides-page-header">
-    <h1 class="page-title"><span class="accent">//</span> guides</h1>
+    <span class="page-eyebrow">// guides</span>
+    <h1 class="page-title">Guides pratiques</h1>
     <p class="page-description">{{ description }}</p>
   </div>
 
   <div class="search-bar-wrapper">
     <div class="search-bar">
       <span class="search-prefix">></span>
-      <input type="search" id="search-input" class="search-input" placeholder="rechercher un guide..." autocomplete="off" spellcheck="false" aria-label="Recherche" />
+      <input type="search" id="search-input" class="search-input" placeholder="rechercher un guide..." autocomplete="off" spellcheck="false" />
       <span class="search-cursor" aria-hidden="true">_</span>
     </div>
-
-    <div class="filter-bar" role="group" aria-label="Filtrer par niveau">
-      <span class="guides-filter-label">niveau :</span>
-      <button class="filter-btn active" data-niveau="all">tous</button>
-      <button class="filter-btn" data-niveau="debutant">👶 débutant</button>
-      <button class="filter-btn" data-niveau="avance">🧠 avancé</button>
-      <button class="filter-btn" data-niveau="expert">⚡ expert</button>
+    <div class="guides-filter-row">
+      <div class="filter-bar">
+        <span class="guides-filter-label">niveau :</span>
+        <button class="filter-btn active" data-niveau="all">tous</button>
+        <button class="filter-btn" data-niveau="debutant">👶 débutant</button>
+        <button class="filter-btn" data-niveau="avance">🧠 avancé</button>
+        <button class="filter-btn" data-niveau="expert">⚡ expert</button>
+      </div>
+      <div class="filter-bar" style="margin-left:auto">
+        <span class="guides-filter-label">cat :</span>
+        <button class="filter-btn active" data-categorie="all">toutes</button>
+        {% for cat in site.categories %}
+        <button class="filter-btn" data-categorie="{{ cat.slug }}">{{ cat.emoji }} {{ cat.label }}</button>
+        {% endfor %}
+      </div>
     </div>
   </div>
 
-  <div class="guide-grid" id="guides-list">
+  <div class="guide-list" id="guides-list">
     {% for guide in collections.guides %}
-    <article class="guide-card" data-niveau="{{ guide.data.niveau }}" data-categorie="{{ guide.data.categorie }}">
-      <div class="guide-card-header">
-        <span class="niveau-badge {{ guide.data.niveau | niveauClass }}">{{ guide.data.niveau | niveauLabel }}</span>
-        <span class="guide-card-cat">{{ guide.data.categorie | categorieLabel }}</span>
-      </div>
-      <h2 class="guide-card-title" style="font-size: 0.95rem;">
-        <a href="{{ guide.url }}" class="guide-card-link">{{ guide.data.title }}</a>
-      </h2>
-      {% if guide.data.description %}
-      <p class="guide-card-description">{{ guide.data.description }}</p>
-      {% endif %}
-      <div class="guide-card-footer">
-        {% if guide.data.tags and guide.data.tags.length %}
-        <div class="card-tags">
-          {% for tag in guide.data.tags | limit(3) %}<span class="tag">{{ tag }}</span>{% endfor %}
-        </div>
+    <a href="{{ guide.url }}" class="guide-row" data-niveau="{{ guide.data.niveau }}" data-categorie="{{ guide.data.categorie }}">
+      <div class="guide-row-main">
+        <span class="guide-row-title">{{ guide.data.title }}</span>
+        {% if guide.data.description %}
+        <span class="guide-row-desc">{{ guide.data.description }}</span>
         {% endif %}
-        <a href="{{ guide.url }}" class="guide-card-cta">lire →</a>
       </div>
-    </article>
+      <div class="guide-row-meta">
+        {% if guide.data.tags %}
+          {% for tag in guide.data.tags | limit(2) %}<span class="tag">{{ tag }}</span>{% endfor %}
+        {% endif %}
+        <span class="niveau-badge {{ guide.data.niveau | niveauClass }}">{{ guide.data.niveau | niveauLabel }}</span>
+        <span class="guide-row-cat">{{ guide.data.categorie | categorieLabel }}</span>
+      </div>
+      <span class="guide-row-arrow">→</span>
+    </a>
     {% endfor %}
   </div>
 
-  <div class="no-results" role="status">
-    <span class="accent">></span> aucun guide trouvé — essaie un autre terme ou filtre
-  </div>
+  <div class="no-results" role="status"><span class="accent">></span> aucun guide trouvé</div>
 </div>

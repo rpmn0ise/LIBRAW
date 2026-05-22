@@ -1,0 +1,43 @@
+<aside class="site-sidebar" id="site-sidebar" role="navigation" aria-label="Navigation">
+
+  <div class="sidebar-section">
+    <span class="sidebar-label">Catégories</span>
+    <nav class="sidebar-nav">
+      {% for cat in site.categories %}
+      {% set catCount = collections["ressources_" + cat.slug] | length %}
+      <a href="/categories/{{ cat.slug }}/"
+         class="sidebar-link{% if page.url and page.url.startsWith('/categories/' + cat.slug) %} active{% endif %}">
+        <span class="sidebar-link-icon">{{ cat.emoji }}</span>
+        {{ cat.label }}
+        <span class="sidebar-link-count">{{ catCount }}</span>
+      </a>
+      {% endfor %}
+    </nav>
+  </div>
+
+  <div class="sidebar-divider"></div>
+
+  <div class="sidebar-section">
+    <span class="sidebar-label">Contenu</span>
+    <nav class="sidebar-nav">
+      <a href="/guides/" class="sidebar-link{% if page.url and page.url.startsWith('/guides') %} active{% endif %}">
+        <span class="sidebar-link-icon">📖</span>
+        Guides
+        <span class="sidebar-link-count">{{ collections.guides | length }}</span>
+      </a>
+    </nav>
+  </div>
+
+  <div class="sidebar-divider"></div>
+
+  <div class="sidebar-section">
+    <span class="sidebar-label">Outils</span>
+    <nav class="sidebar-nav">
+      <a href="/generator/" class="sidebar-link{% if page.url == '/generator/' %} active{% endif %}">
+        <span class="sidebar-link-icon">✦</span>
+        Générateur
+      </a>
+    </nav>
+  </div>
+
+</aside>
