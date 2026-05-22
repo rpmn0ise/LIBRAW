@@ -1,7 +1,7 @@
 ---
 title: "Ryujinx Fork (Ryubing)"
 description: "Fork communautaire de Ryujinx, l'émulateur Switch original ayant été arrêté. Maintenu activement, compatibilité élevée, meilleure option actuelle pour émuler la Switch."
-url: "https://github.com/Ryubing/Ryujinx"
+url: "https://ryujinx.app/"
 categorie: emulation
 tags:
   - switch
