@@ -803,44 +803,41 @@ input, textarea, select { font: inherit; color: inherit; background: none; borde
   /* App shell : sidebar passe en dessous du header, pleine largeur */
   .app-shell { grid-template-columns: 1fr; }
 
-  /* Sidebar : bande horizontale scrollable */
+  /* Sidebar : 2 lignes, flex-wrap */
   .site-sidebar {
     position: static;
     height: auto;
     flex-direction: row;
     flex-wrap: wrap;
     align-items: center;
-    padding: 0.5rem 0.75rem;
+    padding: 0.4rem 0.75rem;
     border-right: none;
     border-bottom: 1px solid var(--border);
-    gap: 0.25rem;
-    overflow-x: auto;
-    overflow-y: visible;
-    scrollbar-width: none;
+    gap: 0.2rem 0;
+    overflow: visible;
   }
-  .site-sidebar::-webkit-scrollbar { display: none; }
   .site-sidebar .sidebar-section {
     padding: 0;
     margin-bottom: 0;
-    display: contents; /* les enfants s'insèrent directement dans le flex row */
+    display: contents;
   }
   .site-sidebar .sidebar-label { display: none; }
   .site-sidebar .sidebar-nav {
     flex-direction: row;
-    flex-wrap: nowrap;
-    gap: 0.2rem;
+    flex-wrap: wrap;
+    gap: 0.15rem;
   }
   .site-sidebar .sidebar-link {
-    padding: 0.3rem 0.65rem;
-    font-size: 0.78rem;
+    padding: 0.28rem 0.6rem;
+    font-size: 0.77rem;
     white-space: nowrap;
     flex-shrink: 0;
   }
   .site-sidebar .sidebar-link.active::before { display: none; }
   .site-sidebar .sidebar-divider {
-    width: 1px; height: 20px;
+    width: 1px; height: 18px;
     background: var(--border);
-    margin: 0 0.25rem;
+    margin: 0.1rem 0.3rem;
     flex-shrink: 0;
     align-self: center;
   }
@@ -951,6 +948,7 @@ input, textarea, select { font: inherit; color: inherit; background: none; borde
     grid-template-columns: 1fr;
     gap: 0;
     padding: 1rem;
+    overflow: hidden;
   }
   .guide-sidebar {
     position: static;
@@ -960,7 +958,13 @@ input, textarea, select { font: inherit; color: inherit; background: none; borde
   }
   .guide-meta-box, .toc-nav {
     width: 100%;
+    box-sizing: border-box;
   }
+  /* Prevent prose overflow on mobile */
+  .prose { overflow-wrap: break-word; word-break: break-word; max-width: 100%; }
+  .prose pre { overflow-x: auto; max-width: 100%; }
+  .prose table { display: block; overflow-x: auto; }
+  .main-content { overflow-x: hidden; }
   /* TOC sur mobile : items en ligne scrollable */
   .toc-links {
     display: flex;
