@@ -7,7 +7,6 @@ document.addEventListener("DOMContentLoaded", () => {
   initSearch();
   initFilters();
   initNiveauFilters();
-  initTOC();
   initGlobalSearch();
 });
 
@@ -145,42 +144,6 @@ function initNiveauFilters() {
   if (searchInput) searchInput.addEventListener("input", apply);
 }
 
-/* ─── Guide TOC ──────────────────────────────────────────────── */
-function initTOC() {
-  const body = document.getElementById("guide-body");
-  const tocLinks = document.getElementById("toc-links");
-  if (!body || !tocLinks) return;
-
-  const headings = body.querySelectorAll("h2, h3");
-  if (headings.length === 0) {
-    document.getElementById("toc")?.style.setProperty("display", "none");
-    return;
-  }
-
-  headings.forEach((h) => {
-    if (!h.id) {
-      h.id = h.textContent.toLowerCase()
-        .normalize("NFD").replace(/[\u0300-\u036f]/g, "")
-        .replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
-    }
-    const a = document.createElement("a");
-    a.href = `#${h.id}`;
-    a.textContent = h.textContent;
-    a.className = `toc-link toc-${h.tagName.toLowerCase()}`;
-    tocLinks.appendChild(a);
-  });
-
-  const observer = new IntersectionObserver(
-    (entries) => {
-      entries.forEach((entry) => {
-        const link = tocLinks.querySelector(`a[href="#${entry.target.id}"]`);
-        if (link) link.classList.toggle("active", entry.isIntersecting);
-      });
-    },
-    { rootMargin: "0px 0px -70% 0px" }
-  );
-  headings.forEach((h) => observer.observe(h));
-}
 
 /* ─── Global search (header) — Ctrl+K focus ─────────────────── */
 function initGlobalSearch() {
