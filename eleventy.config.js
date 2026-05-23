@@ -7,6 +7,8 @@ export default function (eleventyConfig) {
   // Passthrough copies
   eleventyConfig.addPassthroughCopy("src/assets");
   eleventyConfig.addPassthroughCopy({ "src/robots.txt": "robots.txt" });
+  eleventyConfig.addPassthroughCopy({ "src/favicon.ico": "favicon.ico" });
+  eleventyConfig.addPassthroughCopy({ "src/favicon.png": "favicon.png" });
   eleventyConfig.addPassthroughCopy({ "_redirects": "_redirects" });
 
   // Watch targets
