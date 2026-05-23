@@ -65,7 +65,7 @@ permalink: /generator/
               <option value="streaming">📺 streaming</option>
               <option value="download">⬇️ download</option>
               <option value="privacy">🔒 privacy</option>
-              <option value="emulation">🎮 émulation</option>
+              <option value="gaming">🎮 gaming</option>
             </select>
           </div>
           <div class="form-group">
@@ -135,7 +135,7 @@ permalink: /generator/
               <option value="streaming">📺 streaming</option>
               <option value="download">⬇️ download</option>
               <option value="privacy">🔒 privacy</option>
-              <option value="emulation">🎮 émulation</option>
+              <option value="gaming">🎮 gaming</option>
             </select>
           </div>
         </div>
@@ -240,7 +240,7 @@ permalink: /generator/
   const todayISO    = () => new Date().toISOString().slice(0,10);
   const niveauLabel = n => ({debutant:'👶 débutant',avance:'🧠 avancé',expert:'⚡ expert'})[n]||n;
   const niveauClass = n => ({debutant:'niveau-debutant',avance:'niveau-avance',expert:'niveau-expert'})[n]||'';
-  const catLabel    = c => ({streaming:'📺 Streaming',download:'⬇️ Download',outils:'🔧 Outils',privacy:'🔒 Privacy',emulation:'🎮 Émulation'})[c]||c;
+  const catLabel    = c => ({streaming:'📺 Streaming',download:'⬇️ Download',outils:'🔧 Outils',privacy:'🔒 Privacy',gaming:'🎮 Gaming'})[c]||c;
 
   // ─── Toast ────────────────────────────────────────────────────
   let toastTimer;

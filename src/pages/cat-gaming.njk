@@ -1,25 +1,25 @@
 ---
 layout: layouts/base.njk
-title: "Émulation"
-description: "Émulateurs, ROMs, consoles."
-permalink: /categories/emulation/
-categorie: emulation
+title: "Gaming"
+description: "Jeux PC, émulation, repacks, mods."
+permalink: /categories/gaming/
+categorie: gaming
 ---
 
 <div class="cat-page-wrapper">
   <div class="cat-page-header">
     <div class="cat-page-title-row">
       <span class="cat-page-emoji">🎮</span>
-      <h1 class="cat-page-title">Émulation</h1>
+      <h1 class="cat-page-title">Gaming</h1>
     </div>
-    <p class="cat-page-desc">Émulateurs, ROMs, consoles.</p>
-    <p class="cat-page-count" id="count-label">{{ collections.ressources_emulation | length }} ressources</p>
+    <p class="cat-page-desc">Jeux PC, émulation, repacks, mods.</p>
+    <p class="cat-page-count" id="count-label">{{ collections.ressources_gaming | length }} ressources</p>
   </div>
 
   <div class="search-bar-wrapper">
     <div class="search-bar">
       <span class="search-prefix">></span>
-      <input type="search" id="search-input" class="search-input" placeholder="rechercher dans emulation..." autocomplete="off" spellcheck="false" />
+      <input type="search" id="search-input" class="search-input" placeholder="rechercher dans gaming..." autocomplete="off" spellcheck="false" />
       <span class="search-cursor" aria-hidden="true">_</span>
     </div>
     <div class="filter-bar">
@@ -32,7 +32,7 @@ categorie: emulation
   </div>
 
   <div class="ressource-list" id="ressource-list">
-    {% for item in collections.ressources_emulation %}
+    {% for item in collections.ressources_gaming %}
     <div class="ressource-row"
          data-title="{{ item.data.title | lower }}"
          data-description="{{ item.data.description | lower }}"

@@ -2,7 +2,7 @@
 title: "FMHY — Émulation"
 description: "Section émulation du wiki FMHY (Free Media Heck Yeah). Liens vers émulateurs, ROMs, BIOS, firmware. Maintenu communautairement, mis à jour régulièrement."
 url: "https://fmhy.net/gaming#emulation-roms"
-categorie: emulation
+categorie: gaming
 tags:
   - emulation
   - wiki

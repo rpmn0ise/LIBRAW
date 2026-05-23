@@ -26,7 +26,7 @@ export default function (eleventyConfig) {
   });
 
   // Ressources par catégorie
-  const categories = ["streaming", "download", "outils", "privacy", "emulation"];
+  const categories = ["streaming", "download", "outils", "privacy", "gaming"];
   for (const cat of categories) {
     eleventyConfig.addCollection(`ressources_${cat}`, (collectionApi) => {
       return collectionApi
@@ -84,7 +84,7 @@ export default function (eleventyConfig) {
       download: "⬇️ Download",
       outils: "🔧 Outils",
       privacy: "🔒 Privacy",
-      emulation: "🎮 Émulation",
+      gaming: "🎮 Gaming",
     };
     return map[cat] || cat;
   });

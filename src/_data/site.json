@@ -1,19 +1,40 @@
 {
   "title": "LIBRAW",
-  "description": "Bibliothèque FR ultra-sélective d'outils et guides pour utilisateurs tech. Streaming, download, privacy, émulation — sélection vérifiée manuellement.",
+  "description": "Bibliothèque FR ultra-sélective d'outils et guides pour utilisateurs tech. Streaming, download, privacy, gaming — sélection vérifiée manuellement.",
   "url": "https://libraw.pages.dev",
   "github": "https://github.com/rpmn0ise/LIBRAW",
   "author": "RPMN0ISE",
   "authorUrl": "https://rpmn0ise.github.io",
   "version": "2.0.0",
   "nav": [
-    { "label": "streaming", "url": "/categories/streaming/" },
-    { "label": "download", "url": "/categories/download/" },
-    { "label": "outils", "url": "/categories/outils/" },
-    { "label": "privacy", "url": "/categories/privacy/" },
-    { "label": "émulation", "url": "/categories/emulation/" },
-    { "label": "guides", "url": "/guides/" },
-    { "label": "+ générer", "url": "/generator/" }
+    {
+      "label": "streaming",
+      "url": "/categories/streaming/"
+    },
+    {
+      "label": "download",
+      "url": "/categories/download/"
+    },
+    {
+      "label": "outils",
+      "url": "/categories/outils/"
+    },
+    {
+      "label": "privacy",
+      "url": "/categories/privacy/"
+    },
+    {
+      "label": "gaming",
+      "url": "/categories/gaming/"
+    },
+    {
+      "label": "guides",
+      "url": "/guides/"
+    },
+    {
+      "label": "+ générer",
+      "url": "/generator/"
+    }
   ],
   "categories": [
     {
@@ -41,10 +62,10 @@
       "description": "VPN, navigateurs, anonymat"
     },
     {
-      "slug": "emulation",
-      "label": "Émulation",
+      "slug": "gaming",
+      "label": "Gaming",
       "emoji": "🎮",
-      "description": "Émulateurs, ROMs, consoles"
+      "description": "Jeux PC, émulation, repacks, mods"
     }
   ]
 }

@@ -2,7 +2,7 @@
 title: "Émuler la Nintendo Switch en 2026"
 description: "Ryujinx fork, keys, firmware, ROMs — tout pour lancer des jeux Switch sur PC sans console."
 date: 2026-03-01
-categorie: emulation
+categorie: gaming
 niveau: avance
 tags:
   - switch
