@@ -766,7 +766,7 @@ input, textarea, select { font: inherit; color: inherit; background: none; borde
 .gen-download-btn:hover { background: var(--accent); color: #fff; }
 .gen-download-btn.copied { background: var(--accent); color: #fff; }
 .gen-preview-split { display: flex; flex-direction: column; gap: 1.2rem; }
-.gen-code-block { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 1rem; overflow-x: auto; font-family: var(--font-mono); font-size: 0.76rem; line-height: 1.65; color: var(--text-muted); white-space: pre; max-height: 340px; overflow-y: auto; }
+.gen-code-block { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 1rem; overflow-x: auto; font-family: var(--font-mono); font-size: 0.76rem; line-height: 1.65; color: var(--text-muted); white-space: pre-wrap; word-break: break-all; max-height: 340px; overflow-y: auto; }
 .gen-code-block code { color: inherit; background: none; padding: 0; font-size: inherit; }
 .gen-card-preview { border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; }
 .preview-label { font-family: var(--font-mono); font-size: 0.7rem; color: var(--text-dim); padding: 0.5rem 0.8rem; background: var(--surface); border-bottom: 1px solid var(--border); }
