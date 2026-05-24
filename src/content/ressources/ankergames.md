@@ -10,6 +10,6 @@ tags:
 niveau: debutant
 verifie: true
 date_verif: "2026/05"
-featured: false
+featured: true
 draft: false
 ---
