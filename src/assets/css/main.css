@@ -1050,3 +1050,109 @@ input, textarea, select { font: inherit; color: inherit; background: none; borde
 .gen-export-btn.active-flash { background: var(--accent); color: #fff; }
 
 .gen-preview-actions { display: flex; gap: 0.4rem; align-items: center; }
+/* ═══════════════════════════════════════════════════════════════
+   PAGE DISCORD
+   ═══════════════════════════════════════════════════════════════ */
+
+.discord-page { max-width: 720px; }
+
+/* Hero */
+.discord-hero {
+  display: flex; align-items: flex-start; gap: 1.25rem;
+  padding-bottom: 2rem; flex-wrap: wrap;
+}
+.discord-hero-icon {
+  width: 56px; height: 56px; border-radius: var(--radius);
+  background: rgba(88, 101, 242, 0.15);
+  border: 1px solid rgba(88, 101, 242, 0.3);
+  display: flex; align-items: center; justify-content: center;
+  color: #5865f2; flex-shrink: 0;
+}
+.discord-hero-text { flex: 1; min-width: 200px; }
+.discord-hero-text .page-title { margin-bottom: 0.35rem; }
+
+.discord-join-btn {
+  display: inline-flex; align-items: center; gap: 0.5rem;
+  padding: 0.6rem 1.25rem;
+  background: #5865f2;
+  color: #fff; font-size: 0.85rem; font-weight: 600;
+  border-radius: var(--radius);
+  transition: all var(--transition);
+  white-space: nowrap; flex-shrink: 0;
+  align-self: flex-start; margin-top: 0.25rem;
+}
+.discord-join-btn:hover { background: #4752c4; color: #fff; transform: translateY(-1px); }
+
+.discord-divider { height: 1px; background: var(--border); margin: 1.75rem 0; }
+
+/* Sections */
+.discord-section { margin-bottom: 0.5rem; }
+.discord-section-title {
+  font-size: 1rem; font-weight: 600; color: var(--text);
+  margin: 0.4rem 0 1.1rem;
+}
+
+/* Channels */
+.discord-channels { display: flex; flex-direction: column; gap: 1.25rem; }
+.discord-channel-group {}
+.channel-group-label {
+  font-size: 0.72rem; font-weight: 600; color: var(--text-dim);
+  text-transform: uppercase; letter-spacing: 0.08em;
+  display: block; margin-bottom: 0.4rem;
+}
+.channel-list {
+  border: 1px solid var(--border); border-radius: var(--radius);
+  overflow: hidden;
+}
+.channel-item {
+  display: flex; align-items: center; gap: 0.6rem;
+  padding: 0.5rem 0.8rem;
+  border-bottom: 1px solid var(--border-subtle);
+  transition: background var(--transition);
+}
+.channel-item:last-child { border-bottom: none; }
+.channel-item:hover { background: var(--bg-card-hover); }
+.channel-hash {
+  font-family: var(--font-mono); font-size: 1rem;
+  color: var(--text-dim); flex-shrink: 0; width: 16px; text-align: center;
+}
+.channel-emoji { font-size: 0.9rem; flex-shrink: 0; width: 16px; text-align: center; }
+.channel-body { display: flex; align-items: baseline; gap: 0.6rem; min-width: 0; flex-wrap: wrap; }
+.channel-name { font-size: 0.83rem; font-weight: 600; color: var(--text); flex-shrink: 0; }
+.channel-desc { font-size: 0.76rem; color: var(--text-muted); }
+
+/* Roles */
+.discord-roles { display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 0.85rem; }
+.discord-role {
+  display: flex; align-items: center; gap: 0.85rem;
+  padding: 0.5rem 0.8rem;
+  background: var(--bg-card); border: 1px solid var(--border);
+  border-radius: var(--radius);
+}
+.role-badge {
+  font-family: var(--font-mono); font-size: 0.72rem;
+  padding: 0.15rem 0.5rem;
+  border: 1px solid; border-radius: var(--radius-sm);
+  white-space: nowrap; flex-shrink: 0;
+}
+.role-desc { font-size: 0.78rem; color: var(--text-muted); }
+.discord-roles-note { font-size: 0.78rem; color: var(--text-dim); line-height: 1.6; }
+
+/* CTA final */
+.discord-cta {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 1rem; flex-wrap: wrap;
+  padding: 1.25rem;
+  background: rgba(88,101,242,0.06);
+  border: 1px solid rgba(88,101,242,0.2);
+  border-radius: var(--radius);
+}
+.discord-cta-text { font-family: var(--font-mono); font-size: 0.8rem; color: var(--text-dim); }
+
+@media (max-width: 700px) {
+  .discord-hero { flex-direction: column; gap: 1rem; }
+  .discord-join-btn { width: 100%; justify-content: center; }
+  .discord-cta { flex-direction: column; align-items: flex-start; }
+  .discord-cta .discord-join-btn { width: 100%; justify-content: center; }
+  .channel-body { flex-direction: column; gap: 0.1rem; }
+}
