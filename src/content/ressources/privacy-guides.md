@@ -11,6 +11,4 @@ niveau: debutant
 verifie: true
 date_verif: "04/2026"
 featured: false
-badges:
-  - 🧠
 ---
