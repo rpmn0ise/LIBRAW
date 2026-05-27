@@ -66,6 +66,12 @@
       "label": "Gaming",
       "emoji": "🎮",
       "description": "Jeux PC, émulation, repacks, mods"
+    },
+    {
+      "slug": "ia",
+      "label": "IA",
+      "emoji": "🤖",
+      "description": "Outils IA, LLMs, automatisation, générateurs"
     }
   ]
 }
