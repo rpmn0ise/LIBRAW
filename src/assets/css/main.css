@@ -1077,6 +1077,35 @@ input, textarea, select { font: inherit; color: inherit; background: none; borde
 
 .gen-preview-actions { display: flex; gap: 0.4rem; align-items: center; }
 
+
+/* ── Drag & Drop overlay ── */
+.gen-dropzone-overlay {
+  position: fixed; inset: 0; z-index: 9999;
+  background: rgba(15,17,23,.88);
+  backdrop-filter: blur(4px);
+  display: flex; align-items: center; justify-content: center;
+  pointer-events: none;
+  transition: opacity .15s;
+}
+.gen-dropzone-overlay.hidden { display: none; }
+.gen-dropzone-inner {
+  border: 2px dashed var(--accent);
+  border-radius: 12px;
+  padding: 3rem 4rem;
+  text-align: center;
+  color: var(--accent);
+  display: flex; flex-direction: column; align-items: center; gap: 1rem;
+  animation: drop-pulse .8s ease-in-out infinite alternate;
+}
+.gen-dropzone-inner svg { opacity: .85; }
+.gen-dropzone-inner p { font-size: 1.1rem; font-family: var(--font-mono); margin: 0; color: var(--text); }
+.gen-dropzone-inner code { background: var(--accent-dim); color: var(--accent); padding: .1em .4em; border-radius: 4px; }
+.gen-drop-hint { font-size: 0.75rem; color: var(--text-muted); font-family: var(--font-mono); }
+@keyframes drop-pulse {
+  from { box-shadow: 0 0 0 0 rgba(108,142,255,.2); }
+  to   { box-shadow: 0 0 0 12px rgba(108,142,255,.0); border-color: rgba(108,142,255,.6); }
+}
+
 /* ── Batch queue panel ── */
 .gen-batch-panel { margin-top: 1rem; border: 1px solid var(--border); border-radius: 6px; padding: 0.65rem 0.8rem; background: var(--surface); }
 .batch-list { list-style: none; margin: 0.5rem 0 0; padding: 0; display: flex; flex-direction: column; gap: 0.3rem; }

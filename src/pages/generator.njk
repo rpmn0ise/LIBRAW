@@ -5,7 +5,16 @@ description: "Générateur de fichiers Markdown pour ressources et guides LIBRAW
 permalink: /generator/
 ---
 
-<div class="gen-wrapper">
+<div class="gen-wrapper" id="gen-wrapper">
+
+  {# ─── Drag & Drop overlay ─────────────────────────────────── #}
+  <div class="gen-dropzone-overlay hidden" id="gen-drop-overlay">
+    <div class="gen-dropzone-inner">
+      <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+      <p>Dépose tes fichiers <code>.md</code> ici</p>
+      <span class="gen-drop-hint">1 fichier → formulaire · plusieurs → file batch</span>
+    </div>
+  </div>
 
   <div class="gen-header">
     <div class="gen-title-row">
@@ -771,6 +780,84 @@ permalink: /generator/
     }
   });
 
+  // ─── Drag & Drop ──────────────────────────────────────────────
+  const overlay   = document.getElementById('gen-drop-overlay');
+  let dragCounter = 0;
+
+  function mdFilesOnly(transfer) {
+    const items = transfer.items ? Array.from(transfer.items) : [];
+    if (items.length) return items.filter(i => i.kind === 'file').map(i => i.getAsFile()).filter(f => f && (f.name.endsWith('.md') || f.type === 'text/markdown' || f.type === 'text/plain'));
+    return Array.from(transfer.files || []).filter(f => f.name.endsWith('.md') || f.type === 'text/markdown');
+  }
+
+  function loadFilesIntoGenerator(files) {
+    if (!files.length) { showToast('⚠ Dépose uniquement des fichiers .md', 'err'); return; }
+    if (files.length === 1) {
+      const reader = new FileReader();
+      reader.onload = ev => {
+        try {
+          const raw = ev.target.result;
+          if (!raw.trimStart().startsWith('---')) { showToast('⚠ Frontmatter YAML manquant (---)', 'err'); return; }
+          const {fm, body} = parseFrontmatter(raw);
+          const type = detectType(fm);
+          setMode(type);
+          if (type === 'ressource') { populateRessource(fm); showToast('✓ Ressource chargée : ' + (fm.title || files[0].name)); }
+          else { populateGuide(fm, body); showToast('✓ Guide chargé : ' + (fm.title || files[0].name)); }
+          update();
+        } catch(err) { showToast('⚠ Erreur : ' + err.message, 'err'); }
+      };
+      reader.readAsText(files[0], 'utf-8');
+    } else {
+      let loaded = 0;
+      files.forEach(file => {
+        const reader = new FileReader();
+        reader.onload = ev => {
+          try {
+            const raw = ev.target.result;
+            if (!raw.trimStart().startsWith('---')) {
+              addBatchItem({ file: file.name, error: 'frontmatter manquant', raw: null });
+            } else {
+              const {fm, body} = parseFrontmatter(raw);
+              const type     = detectType(fm);
+              const filename = slugify(fm.title || file.name.replace('.md','')) + '.md';
+              const folder   = type === 'guide' ? 'src/content/guides' : 'src/content/ressources';
+              addBatchItem({ file: file.name, title: fm.title || file.name, type, filename, filepath: folder + '/' + filename, raw, error: null });
+            }
+          } catch(err) { addBatchItem({ file: file.name, error: err.message, raw: null }); }
+          loaded++;
+          if (loaded === files.length) showToast('✓ ' + files.length + ' fichiers chargés dans la file.');
+        };
+        reader.readAsText(file, 'utf-8');
+      });
+    }
+  }
+
+  document.addEventListener('dragenter', e => {
+    if (!e.dataTransfer || !e.dataTransfer.types.includes('Files')) return;
+    dragCounter++;
+    overlay.classList.remove('hidden');
+    e.preventDefault();
+  });
+
+  document.addEventListener('dragleave', e => {
+    if (!e.dataTransfer || !e.dataTransfer.types.includes('Files')) return;
+    dragCounter--;
+    if (dragCounter <= 0) { dragCounter = 0; overlay.classList.add('hidden'); }
+  });
+
+  document.addEventListener('dragover', e => {
+    if (!e.dataTransfer || !e.dataTransfer.types.includes('Files')) return;
+    e.preventDefault();
+    e.dataTransfer.dropEffect = 'copy';
+  });
+
+  document.addEventListener('drop', e => {
+    e.preventDefault();
+    dragCounter = 0;
+    overlay.classList.add('hidden');
+    const files = mdFilesOnly(e.dataTransfer);
+    loadFilesIntoGenerator(files);
+  });
+
+
 })();
-</script>
-{% endblock %}
