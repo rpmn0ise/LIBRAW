@@ -1076,6 +1076,22 @@ input, textarea, select { font: inherit; color: inherit; background: none; borde
 .gen-github-status--warn    { color: #d29922; }
 
 .gen-preview-actions { display: flex; gap: 0.4rem; align-items: center; }
+
+/* ── Batch queue panel ── */
+.gen-batch-panel { margin-top: 1rem; border: 1px solid var(--border); border-radius: 6px; padding: 0.65rem 0.8rem; background: var(--surface); }
+.batch-list { list-style: none; margin: 0.5rem 0 0; padding: 0; display: flex; flex-direction: column; gap: 0.3rem; }
+.batch-item { display: flex; align-items: center; gap: 0.5rem; font-size: 0.74rem; padding: 0.3rem 0.4rem; border-radius: 4px; background: var(--surface-2, rgba(255,255,255,.04)); }
+.batch-icon { font-size: 0.75rem; width: 1.1rem; text-align: center; flex-shrink: 0; }
+.batch-ok      { color: #3fb950; }
+.batch-err     { color: #f85149; }
+.batch-loading { color: var(--text-muted); }
+.batch-pending { color: var(--text-muted); }
+.batch-name { flex: 1; color: var(--text); font-family: var(--font-mono); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.batch-name--err { color: #f85149; }
+.batch-meta { font-size: 0.68rem; color: var(--text-muted); font-family: var(--font-mono); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 200px; }
+.batch-remove { margin-left: auto; background: none; border: none; cursor: pointer; color: var(--text-muted); font-size: 1rem; line-height: 1; padding: 0 0.2rem; flex-shrink: 0; }
+.batch-remove:hover { color: #f85149; }
+
 /* ═══════════════════════════════════════════════════════════════
    PAGE DISCORD
    ═══════════════════════════════════════════════════════════════ */

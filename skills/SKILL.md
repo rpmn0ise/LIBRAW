@@ -63,7 +63,6 @@ niveau: debutant
 verifie: true
 date_verif: "2026/05"
 featured: false
-starred: false
 draft: false
 ---
 ```
@@ -173,7 +172,6 @@ exemple --option valeur
 
 ### Pour le frontmatter
 - Ne jamais modifier les champs `verifie`, `date_verif`, `featured`, `draft` (utiliser les valeurs par défaut des templates)
-- `starred: true` uniquement pour les outils vraiment indispensables — ceux que tu recommanderais en premier à n'importe qui. Utiliser avec parcimonie.
 - `date` dans les guides : toujours au format `YYYY-MM-DD`
 - `date_verif` dans les ressources : toujours au format `"YYYY/MM"`
 
@@ -186,42 +184,3 @@ Les templates bruts sont dans `assets/` :
 - `assets/template-guide.md` — structure complète vide pour guide
 
 Utilise-les comme base si tu dois créer les fichiers depuis zéro.
-
----
-
-## Étape 6 — Commande Git de commit
-
-À la fin de chaque génération, fournir automatiquement la commande bash adaptée au type de contenu créé.
-
-### Si c'est une fiche ressource
-
-```bash
-git add . && git commit -m "feat(ressource): ajout nom-de-la-ressource" && git push
-```
-
-### Si c'est un guide
-
-```bash
-git add . && git commit -m "feat(guide): ajout nom-du-guide" && git push
-```
-
-### Si plusieurs fichiers sont générés
-
-Utiliser un commit global cohérent :
-
-```bash
-git add . && git commit -m "feat(libraw): ajout ressources et guides" && git push
-```
-
----
-
-## Règles pour les messages de commit
-
-- Toujours utiliser des messages courts et explicites
-- Format obligatoire :
-  - `feat(ressource): ajout ...`
-  - `feat(guide): ajout ...`
-  - `fix(...)`
-  - `docs(...)`
-- Utiliser le nom réel du fichier ou de l'outil quand pertinent
-- Toujours fournir la commande complète prête à copier-coller

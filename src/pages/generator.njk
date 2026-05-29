@@ -27,7 +27,7 @@ permalink: /generator/
     <label class="gen-action-btn gen-import-btn" for="gen-upload-input" title="Importer un .md existant">
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
       importer
-      <input type="file" id="gen-upload-input" accept=".md,text/markdown,text/plain" style="display:none" />
+      <input type="file" id="gen-upload-input" accept=".md,text/markdown,text/plain" style="display:none" multiple />
     </label>
   </div>
 
@@ -230,6 +230,22 @@ permalink: /generator/
           </p>
         </div>
         <div class="gen-github-status" id="gen-github-status"></div>
+      </div>
+
+      {# ─── Batch queue panel ───────────────────────────────────── #}
+      <div class="gen-batch-panel hidden" id="gen-batch-panel">
+        <div class="gen-github-header">
+          <span class="gen-preview-label">// file en attente (<span id="batch-count">0</span>)</span>
+          <div style="display:flex;gap:0.4rem;align-items:center">
+            <button class="gen-action-btn gen-publish-btn" id="btn-publish-batch">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 2C6.477 2 2 6.477 2 12c0 4.42 2.865 8.17 6.839 9.49.5.092.682-.217.682-.482 0-.237-.008-.866-.013-1.7-2.782.603-3.369-1.342-3.369-1.342-.454-1.155-1.11-1.463-1.11-1.463-.908-.62.069-.608.069-.608 1.003.07 1.531 1.03 1.531 1.03.892 1.529 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.11-4.555-4.943 0-1.091.39-1.984 1.029-2.683-.103-.253-.446-1.27.098-2.647 0 0 .84-.269 2.75 1.025A9.578 9.578 0 0 1 12 6.836c.85.004 1.705.115 2.504.337 1.909-1.294 2.747-1.025 2.747-1.025.546 1.377.202 2.394.1 2.647.64.699 1.028 1.592 1.028 2.683 0 3.842-2.339 4.687-4.566 4.935.359.309.678.919.678 1.852 0 1.336-.012 2.415-.012 2.741 0 .267.18.578.688.48C19.138 20.167 22 16.418 22 12c0-5.523-4.477-10-10-10z"/></svg>
+              <span id="batch-publish-text">publier tout</span>
+            </button>
+            <button class="gen-action-btn gen-danger-btn" id="btn-clear-batch">vider</button>
+          </div>
+        </div>
+        <ul class="batch-list" id="batch-list"></ul>
+        <div class="gen-github-status" id="gen-batch-status"></div>
       </div>
 
     </div>
@@ -456,24 +472,170 @@ permalink: /generator/
     setVal('g-body', body||'');
   }
 
-  // ─── Importer ─────────────────────────────────────────────────
+  // ─── Importer (simple ou multiple) ───────────────────────────
   uploadInput.addEventListener('change', e => {
-    const file = e.target.files[0]; if (!file) return;
-    const reader = new FileReader();
-    reader.onload = ev => {
+    const files = Array.from(e.target.files);
+    if (!files.length) return;
+
+    if (files.length === 1) {
+      // Comportement original : charge dans le formulaire
+      const file = files[0];
+      const reader = new FileReader();
+      reader.onload = ev => {
+        try {
+          const raw = ev.target.result;
+          if (!raw.trimStart().startsWith('---')) { showToast('⚠ Fichier invalide : frontmatter YAML manquant (---)', 'err'); return; }
+          const {fm, body} = parseFrontmatter(raw);
+          const type = detectType(fm);
+          setMode(type);
+          if (type==='ressource') { populateRessource(fm); showToast(`✓ Ressource importée : ${fm.title||file.name}`); }
+          else { populateGuide(fm, body); showToast(`✓ Guide importé : ${fm.title||file.name}`); }
+          update();
+        } catch(err) { showToast('⚠ Erreur de parsing : '+err.message, 'err'); }
+        uploadInput.value='';
+      };
+      reader.readAsText(file, 'utf-8');
+    } else {
+      // Multi-fichiers → file d'attente batch
+      let loaded = 0;
+      files.forEach(file => {
+        const reader = new FileReader();
+        reader.onload = ev => {
+          try {
+            const raw = ev.target.result;
+            if (!raw.trimStart().startsWith('---')) {
+              addBatchItem({ file: file.name, error: 'frontmatter manquant', raw: null });
+            } else {
+              const {fm, body} = parseFrontmatter(raw);
+              const type = detectType(fm);
+              const filename = (type === 'guide' ? 'guide-' : '') + slugify(fm.title || file.name.replace('.md','')) + '.md';
+              const folder = type === 'guide' ? 'src/content/guides' : 'src/content/ressources';
+              addBatchItem({ file: file.name, title: fm.title || file.name, type, filename, filepath: folder + '/' + filename, raw, error: null });
+            }
+          } catch(err) {
+            addBatchItem({ file: file.name, error: err.message, raw: null });
+          }
+          loaded++;
+          if (loaded === files.length) {
+            showToast(`✓ ${files.length} fichiers chargés dans la file.`);
+            uploadInput.value = '';
+          }
+        };
+        reader.readAsText(file, 'utf-8');
+      });
+    }
+  });
+
+  // ─── Batch queue ──────────────────────────────────────────────
+  let batchQueue = [];
+
+  function addBatchItem(item) {
+    batchQueue.push({ ...item, status: item.error ? 'error' : 'pending' });
+    renderBatchList();
+  }
+
+  function renderBatchList() {
+    const panel = document.getElementById('gen-batch-panel');
+    const list  = document.getElementById('batch-list');
+    const count = document.getElementById('batch-count');
+    panel.classList.toggle('hidden', batchQueue.length === 0);
+    count.textContent = batchQueue.length;
+    list.innerHTML = batchQueue.map((item, i) => {
+      const icon = item.status === 'ok'      ? '<span class="batch-icon batch-ok">✓</span>'
+                 : item.status === 'error'   ? '<span class="batch-icon batch-err">✗</span>'
+                 : item.status === 'loading' ? '<span class="batch-icon batch-loading">⏳</span>'
+                 : '<span class="batch-icon batch-pending">—</span>';
+      const info = item.error
+        ? `<span class="batch-name batch-name--err">${item.file}</span><span class="batch-meta">${item.error}</span>`
+        : `<span class="batch-name">${item.title}</span><span class="batch-meta">${item.filepath}</span>`;
+      return `<li class="batch-item" data-i="${i}">${icon}${info}<button class="batch-remove" data-i="${i}" title="Retirer">×</button></li>`;
+    }).join('');
+    list.querySelectorAll('.batch-remove').forEach(btn => {
+      btn.addEventListener('click', () => {
+        batchQueue.splice(Number(btn.dataset.i), 1);
+        renderBatchList();
+      });
+    });
+  }
+
+  document.getElementById('btn-clear-batch').addEventListener('click', () => {
+    batchQueue = [];
+    renderBatchList();
+  });
+
+  document.getElementById('btn-publish-batch').addEventListener('click', async () => {
+    const token = localStorage.getItem('libraw_github_token');
+    if (!token) { showToast('⚠ Aucun token GitHub configuré.', 'err'); return; }
+
+    const pending = batchQueue.filter(i => i.status === 'pending' && i.raw);
+    if (!pending.length) { showToast('⚠ Aucun fichier valide en attente.', 'err'); return; }
+
+    const batchStatus = document.getElementById('gen-batch-status');
+    const batchPublishText = document.getElementById('batch-publish-text');
+    const batchPublishBtn  = document.getElementById('btn-publish-batch');
+
+    batchPublishBtn.disabled = true;
+    batchPublishText.textContent = 'publication…';
+
+    let ok = 0, fail = 0;
+
+    for (const item of pending) {
+      // Update status visually
+      item.status = 'loading';
+      renderBatchList();
+
       try {
-        const raw = ev.target.result;
-        if (!raw.trimStart().startsWith('---')) { showToast('⚠ Fichier invalide : frontmatter YAML manquant (---)', 'err'); return; }
-        const {fm, body} = parseFrontmatter(raw);
-        const type = detectType(fm);
-        setMode(type);
-        if (type==='ressource') { populateRessource(fm); showToast(`✓ Ressource importée : ${fm.title||file.name}`); }
-        else { populateGuide(fm, body); showToast(`✓ Guide importé : ${fm.title||file.name}`); }
-        update();
-      } catch(err) { showToast('⚠ Erreur de parsing : '+err.message, 'err'); }
-      uploadInput.value='';
-    };
-    reader.readAsText(file, 'utf-8');
+        // Check if file exists (for SHA)
+        let sha = null;
+        const checkRes = await fetch(
+          'https://api.github.com/repos/' + GITHUB_OWNER + '/' + GITHUB_REPO + '/contents/' + item.filepath,
+          { headers: { Authorization: 'Bearer ' + token, Accept: 'application/vnd.github+json' } }
+        );
+        if (checkRes.status === 401) {
+          showToast('⚠ Token invalide ou expiré.', 'err');
+          item.status = 'error'; item.error = 'token invalide';
+          fail++;
+          renderBatchList();
+          break;
+        }
+        if (checkRes.ok) sha = (await checkRes.json()).sha;
+
+        const encoded   = btoa(unescape(encodeURIComponent(item.raw)));
+        const commitMsg = item.type === 'guide'
+          ? 'feat(guide): ajout ' + item.filename.replace('.md','')
+          : 'feat(ressource): ajout ' + item.filename.replace('.md','');
+        const body = { message: commitMsg, content: encoded, branch: GITHUB_BRANCH };
+        if (sha) body.sha = sha;
+
+        const res = await fetch(
+          'https://api.github.com/repos/' + GITHUB_OWNER + '/' + GITHUB_REPO + '/contents/' + item.filepath,
+          {
+            method: 'PUT',
+            headers: { Authorization: 'Bearer ' + token, Accept: 'application/vnd.github+json', 'Content-Type': 'application/json' },
+            body: JSON.stringify(body)
+          }
+        );
+
+        if (res.ok) { item.status = 'ok'; ok++; }
+        else {
+          const err = await res.json().catch(() => ({message: res.statusText}));
+          item.status = 'error'; item.error = err.message; fail++;
+        }
+      } catch(e) {
+        item.status = 'error'; item.error = e.message; fail++;
+      }
+      renderBatchList();
+
+      // Small delay to avoid hitting rate limits
+      await new Promise(r => setTimeout(r, 300));
+    }
+
+    batchPublishBtn.disabled = false;
+    batchPublishText.textContent = 'publier tout';
+    batchStatus.textContent = `✓ ${ok} publié${ok>1?'s':''} — ${fail} échec${fail>1?'s':''}`;
+    batchStatus.className = 'gen-github-status ' + (fail ? 'gen-github-status--warn' : 'gen-github-status--success');
+    showToast(`${ok} fichier${ok>1?'s':''} publié${ok>1?'s':''} sur GitHub.`);
+    setTimeout(() => { batchStatus.textContent = ''; batchStatus.className = 'gen-github-status'; }, 8000);
   });
 
   // ─── Init ─────────────────────────────────────────────────────
