@@ -1,17 +1,11 @@
 ---
 title: "SteamRIP"
-description: "jeux Steam sans DRM, installation directe"
-url: "https://elamigos.site/"
+description: "Collection de jeux PC Steam pré-installés ne nécessitant aucune procédure d'installation, prêts à lancer directement."
+url: "https://steamrip.com/"
 categorie: gaming
-tags:
-  - gaming
-  - repacks
-  - portable
-  - crack
 niveau: debutant
 verifie: true
 date_verif: "2026/05"
 featured: false
-starred: false
 draft: false
 ---

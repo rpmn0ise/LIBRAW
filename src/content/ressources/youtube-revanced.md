@@ -1,12 +1,11 @@
 ---
 title: "YouTube ReVanced"
-description: "APK Android modifié de YouTube supprimant les publicités et activant la lecture en arrière-plan, sans compte Google requis."
+description: "Application Android modifiée supprimant les publicités YouTube et ajoutant des fonctionnalités comme la lecture en arrière-plan et l'écran éteint."
 url: "https://github.com/driftywinds/YT-builds"
 categorie: outils
-niveau: debutant
+niveau: intermediaire
 verifie: true
 date_verif: "2026/05"
 featured: false
-starred: false
 draft: false
 ---

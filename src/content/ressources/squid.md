@@ -1,12 +1,11 @@
 ---
 title: "Squid"
-description: "Outil en ligne de téléchargement de musique, permettant de récupérer des pistes audio depuis plusieurs plateformes de streaming."
+description: "Outil de téléchargement dédié à Deezer permettant d'exporter des pistes en FLAC."
 url: "https://squid.wtf/"
 categorie: download
-niveau: debutant
+niveau: intermediaire
 verifie: true
 date_verif: "2026/05"
 featured: false
-starred: false
 draft: false
 ---

@@ -1,17 +1,11 @@
 ---
 title: "Movix"
-description: "**Movix**, c'est le portail qui centralise toutes les grandes sources de streaming françaises gratuites en une seule interface moderne et sans prise de tête."
-url: "https://movix.online/"
+description: "Plateforme de streaming open source proposant des films et séries en 4K et 1080p, sans inscription requise."
+url: "https://movix.cloud"
 categorie: streaming
-tags:
-  - film
-  - series
-  - streaming
-  - telechargement
 niveau: debutant
 verifie: true
 date_verif: "2026/05"
-featured: true
-starred: false
+featured: false
 draft: false
 ---

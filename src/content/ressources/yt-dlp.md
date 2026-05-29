@@ -1,17 +1,11 @@
 ---
 title: "yt-dlp"
-description: "Outil CLI de téléchargement vidéo/audio. Fork de youtube-dl, maintenu activement. Compatible YouTube, SoundCloud, Twitch, et 1000+ autres sites."
+description: "Outil en ligne de commande open source pour télécharger des vidéos depuis YouTube et des centaines d'autres plateformes, avec de nombreuses options de format et qualité."
 url: "https://github.com/yt-dlp/yt-dlp"
 categorie: outils
-tags:
-  - cli
-  - vidéo
-  - audio
-  - youtube
-niveau: debutant
+niveau: intermediaire
 verifie: true
-date_verif: "04/2026"
-featured: true
-starred: false
-guide: /guides/guide-yt-dlp/
+date_verif: "2026/05"
+featured: false
+draft: false
 ---

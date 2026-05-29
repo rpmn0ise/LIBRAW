@@ -1,16 +1,11 @@
 ---
 title: "Anna's Archive"
-description: "Moteur de recherche unifié pour ebooks, articles, comics. Agrège Z-Library, Sci-Hub, LibGen et d'autres. Interface minimaliste, résultats solides."
-url: "https://annas-archive.pk/"
+description: "Le plus grand moteur de recherche de livres numériques au monde, agrégant plusieurs bibliothèques pirate dont Z-Library, Libgen et Sci-Hub."
+url: "https://fr.annas-archive.li/"
 categorie: download
-tags:
-  - ebooks
-  - livres
-  - scihub
-  - libgen
 niveau: debutant
 verifie: true
-date_verif: "04/2026"
+date_verif: "2026/05"
 featured: false
-starred: false
+draft: false
 ---
