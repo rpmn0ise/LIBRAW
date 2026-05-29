@@ -1049,6 +1049,32 @@ input, textarea, select { font: inherit; color: inherit; background: none; borde
 .gen-export-btn:hover { background: var(--accent); color: #fff; border-color: var(--accent); }
 .gen-export-btn.active-flash { background: var(--accent); color: #fff; }
 
+/* ── Publish button ── */
+.gen-publish-btn { border-color: #3fb950; background: rgba(63,185,80,.1); color: #3fb950; }
+.gen-publish-btn:hover:not(:disabled) { background: #3fb950; color: #fff; border-color: #3fb950; }
+.gen-publish-btn.active-flash { background: #3fb950; color: #fff; }
+.gen-publish-btn:disabled { opacity: .35; cursor: not-allowed; }
+.gen-danger-btn { border-color: #f85149 !important; color: #f85149 !important; background: rgba(248,81,73,.08) !important; }
+.gen-danger-btn:hover { background: rgba(248,81,73,.18) !important; }
+
+/* ── GitHub panel ── */
+.gen-github-panel { margin-top: 1rem; border: 1px solid var(--border); border-radius: 6px; padding: 0.65rem 0.8rem; background: var(--surface); }
+.gen-github-header { display: flex; align-items: center; justify-content: space-between; min-height: 1.6rem; }
+.gen-github-toggle { background: none; border: none; cursor: pointer; display: flex; align-items: center; gap: 0.3rem; font-size: 0.72rem; color: var(--text-muted); padding: 0.15rem 0.3rem; border-radius: 4px; transition: color .15s; font-family: var(--font-mono); }
+.gen-github-toggle:hover { color: var(--accent); }
+.gen-github-config { margin-top: 0.6rem; display: flex; flex-direction: column; gap: 0.5rem; }
+.github-token-row { display: flex; gap: 0.4rem; align-items: center; }
+.github-token-row .form-input { flex: 1; font-family: var(--font-mono); font-size: 0.75rem; letter-spacing: 0.03em; }
+.github-token-hint { font-size: 0.72rem; color: var(--text-muted); line-height: 1.55; margin: 0; }
+.github-token-hint a { color: var(--accent); text-decoration: none; }
+.github-token-hint a:hover { text-decoration: underline; }
+.github-token-hint code { background: var(--surface-2, rgba(255,255,255,.06)); padding: 0.1em 0.35em; border-radius: 3px; font-size: 0.85em; font-family: var(--font-mono); }
+.gen-github-status { font-size: 0.74rem; margin-top: 0.35rem; min-height: 1.1em; font-family: var(--font-mono); }
+.gen-github-status--success { color: #3fb950; }
+.gen-github-status--error   { color: #f85149; }
+.gen-github-status--loading { color: var(--text-muted); }
+.gen-github-status--warn    { color: #d29922; }
+
 .gen-preview-actions { display: flex; gap: 0.4rem; align-items: center; }
 /* ═══════════════════════════════════════════════════════════════
    PAGE DISCORD

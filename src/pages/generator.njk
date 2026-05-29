@@ -193,6 +193,10 @@ permalink: /generator/
             <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
             <span id="dl-text">exporter</span>
           </button>
+          <button class="gen-action-btn gen-publish-btn" id="gen-publish-btn" title="Configurer un token GitHub pour publier" disabled>
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 2C6.477 2 2 6.477 2 12c0 4.42 2.865 8.17 6.839 9.49.5.092.682-.217.682-.482 0-.237-.008-.866-.013-1.7-2.782.603-3.369-1.342-3.369-1.342-.454-1.155-1.11-1.463-1.11-1.463-.908-.62.069-.608.069-.608 1.003.07 1.531 1.03 1.531 1.03.892 1.529 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.11-4.555-4.943 0-1.091.39-1.984 1.029-2.683-.103-.253-.446-1.27.098-2.647 0 0 .84-.269 2.75 1.025A9.578 9.578 0 0 1 12 6.836c.85.004 1.705.115 2.504.337 1.909-1.294 2.747-1.025 2.747-1.025.546 1.377.202 2.394.1 2.647.64.699 1.028 1.592 1.028 2.683 0 3.842-2.339 4.687-4.566 4.935.359.309.678.919.678 1.852 0 1.336-.012 2.415-.012 2.741 0 .267.18.578.688.48C19.138 20.167 22 16.418 22 12c0-5.523-4.477-10-10-10z"/></svg>
+            <span id="publish-text">publier</span>
+          </button>
         </div>
       </div>
 
@@ -202,6 +206,30 @@ permalink: /generator/
           <div class="preview-label">// rendu carte</div>
           <div id="card-preview-inner"><p class="preview-empty">— aperçu disponible après saisie</p></div>
         </div>
+      </div>
+
+      {# ─── GitHub publish panel ────────────────────────────────── #}
+      <div class="gen-github-panel" id="gen-github-panel">
+        <div class="gen-github-header">
+          <span class="gen-preview-label">// publier sur github</span>
+          <button class="gen-github-toggle" id="gen-github-toggle">
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+            <span id="github-toggle-label">configurer le token</span>
+          </button>
+        </div>
+        <div class="gen-github-config hidden" id="gen-github-config">
+          <div class="github-token-row">
+            <input type="password" id="github-token" class="form-input" placeholder="github_pat_xxxx…" autocomplete="off" spellcheck="false" />
+            <button class="gen-action-btn" id="btn-save-token">enregistrer</button>
+            <button class="gen-action-btn gen-danger-btn" id="btn-clear-token">effacer</button>
+          </div>
+          <p class="github-token-hint">
+            Stocké uniquement dans <strong>votre navigateur</strong> (localStorage). Créez un
+            <a href="https://github.com/settings/tokens?type=beta" target="_blank" rel="noopener">Fine-grained token</a>
+            avec permission <code>Contents: write</code> sur le repo <code>LIBRAW</code> uniquement.
+          </p>
+        </div>
+        <div class="gen-github-status" id="gen-github-status"></div>
       </div>
 
     </div>
@@ -451,6 +479,136 @@ permalink: /generator/
   // ─── Init ─────────────────────────────────────────────────────
   document.getElementById('g-date').value = todayISO();
   update();
+
+  // ─── GitHub publish ───────────────────────────────────────────
+  const GITHUB_OWNER  = 'rpmn0ise';
+  const GITHUB_REPO   = 'LIBRAW';
+  const GITHUB_BRANCH = 'main';
+
+  const githubTokenInput = document.getElementById('github-token');
+  const btnSaveToken     = document.getElementById('btn-save-token');
+  const btnClearToken    = document.getElementById('btn-clear-token');
+  const publishBtn       = document.getElementById('gen-publish-btn');
+  const publishText      = document.getElementById('publish-text');
+  const githubStatus     = document.getElementById('gen-github-status');
+  const githubToggle     = document.getElementById('gen-github-toggle');
+  const toggleLabel      = document.getElementById('github-toggle-label');
+  const githubConfig     = document.getElementById('gen-github-config');
+
+  // Toggle config panel visibility
+  githubToggle.addEventListener('click', () => {
+    const isHidden = githubConfig.classList.toggle('hidden');
+    toggleLabel.textContent = isHidden ? 'configurer le token' : 'masquer';
+  });
+
+  // Load saved token on startup
+  (function initToken() {
+    const saved = localStorage.getItem('libraw_github_token');
+    if (saved) {
+      githubTokenInput.value = saved;
+      publishBtn.disabled = false;
+      publishBtn.title = 'Publier directement sur GitHub';
+      toggleLabel.textContent = 'token actif ✓';
+    }
+  })();
+
+  btnSaveToken.addEventListener('click', () => {
+    const t = githubTokenInput.value.trim();
+    if (!t) { showToast('⚠ Token vide.', 'err'); return; }
+    localStorage.setItem('libraw_github_token', t);
+    publishBtn.disabled = false;
+    publishBtn.title = 'Publier directement sur GitHub';
+    githubConfig.classList.add('hidden');
+    toggleLabel.textContent = 'token actif ✓';
+    showToast('✓ Token enregistré dans le navigateur.');
+  });
+
+  btnClearToken.addEventListener('click', () => {
+    localStorage.removeItem('libraw_github_token');
+    githubTokenInput.value = '';
+    publishBtn.disabled = true;
+    publishBtn.title = 'Configurer un token GitHub pour publier';
+    toggleLabel.textContent = 'configurer le token';
+    showToast('Token supprimé.', 'warn');
+  });
+
+  function setGithubStatus(msg, type = 'info') {
+    githubStatus.textContent = msg;
+    githubStatus.className   = 'gen-github-status gen-github-status--' + type;
+    if (type !== 'loading') {
+      setTimeout(() => { githubStatus.textContent = ''; githubStatus.className = 'gen-github-status'; }, 7000);
+    }
+  }
+
+  publishBtn.addEventListener('click', async () => {
+    const token = localStorage.getItem('libraw_github_token');
+    if (!token) { showToast('⚠ Aucun token configuré.', 'err'); return; }
+
+    const md       = getMd();
+    const filename = getFilename();
+    if (filename === '—') { showToast('⚠ Remplis au moins le titre.', 'err'); return; }
+
+    const folder    = mode === 'guide' ? 'src/content/guides' : 'src/content/ressources';
+    const filepath  = folder + '/' + filename;
+    const commitMsg = mode === 'guide'
+      ? 'feat(guide): ajout ' + filename.replace('.md','')
+      : 'feat(ressource): ajout ' + filename.replace('.md','');
+
+    publishBtn.disabled      = true;
+    publishText.textContent  = 'publication…';
+    setGithubStatus('⏳ Connexion à GitHub…', 'loading');
+
+    try {
+      // Check if file already exists (need SHA to update)
+      let sha = null;
+      const checkRes = await fetch(
+        'https://api.github.com/repos/' + GITHUB_OWNER + '/' + GITHUB_REPO + '/contents/' + filepath,
+        { headers: { Authorization: 'Bearer ' + token, Accept: 'application/vnd.github+json' } }
+      );
+      if (checkRes.status === 401) {
+        setGithubStatus('✗ Token invalide ou expiré — vérifiez votre token.', 'error');
+        showToast('⚠ Token GitHub invalide.', 'err');
+        return;
+      }
+      if (checkRes.ok) sha = (await checkRes.json()).sha;
+
+      // Encode content as base64
+      const encoded = btoa(unescape(encodeURIComponent(md)));
+      const body    = { message: commitMsg, content: encoded, branch: GITHUB_BRANCH };
+      if (sha) body.sha = sha;
+
+      const res = await fetch(
+        'https://api.github.com/repos/' + GITHUB_OWNER + '/' + GITHUB_REPO + '/contents/' + filepath,
+        {
+          method: 'PUT',
+          headers: {
+            Authorization: 'Bearer ' + token,
+            Accept: 'application/vnd.github+json',
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(body)
+        }
+      );
+
+      if (res.ok) {
+        const action = sha ? 'mis à jour' : 'créé';
+        setGithubStatus('✓ Fichier ' + action + ' → ' + filepath, 'success');
+        showToast('✓ Publié : ' + filename);
+        flashBtn(publishBtn, publishText, 'publié ✓');
+      } else {
+        const err = await res.json().catch(() => ({message: res.statusText}));
+        setGithubStatus('✗ Erreur GitHub : ' + err.message, 'error');
+        showToast('⚠ Erreur : ' + err.message, 'err');
+      }
+    } catch (e) {
+      setGithubStatus('✗ Erreur réseau : ' + e.message, 'error');
+      showToast('⚠ Erreur réseau.', 'err');
+    } finally {
+      publishBtn.disabled     = false;
+      publishText.textContent = 'publier';
+    }
+  });
+
 })();
 </script>
 {% endblock %}
