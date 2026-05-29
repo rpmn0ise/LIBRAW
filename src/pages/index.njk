@@ -42,51 +42,6 @@ permalink: /
 </section>
 
 
-{# ─── Starred (indispensables) ──────────────────────────────────── #}
-{% if collections.ressourcesStarred | length %}
-<section class="section">
-  <div class="section-header">
-    <div class="section-title-group">
-      <span class="section-label">// incontournables</span>
-      <span class="section-title">⭐ Indispensables</span>
-    </div>
-    <span class="starred-badge-count">{{ collections.ressourcesStarred | length }} ressources</span>
-  </div>
-
-  <div class="ressource-list ressource-list--starred">
-    {% for item in collections.ressourcesStarred %}
-    <div class="ressource-row"
-         data-title="{{ item.data.title | lower }}"
-         data-description="{{ item.data.description | lower }}"
-         data-categorie="{{ item.data.categorie }}"
-         data-niveau="{{ item.data.niveau }}"
-         data-starred="true">
-      <span class="row-star" title="Indispensable">⭐</span>
-      <div class="row-main">
-        <a href="{{ item.data.url }}" class="row-title" target="_blank" rel="noopener noreferrer">{{ item.data.title }}</a>
-        <span class="row-desc">{{ item.data.description }}</span>
-      </div>
-      <div class="row-tags">
-        {% if item.data.niveau %}
-        <span class="niveau-badge {{ item.data.niveau | niveauClass }}">{{ item.data.niveau | niveauLabel }}</span>
-        {% endif %}
-        {% if item.data.tags %}
-          {% for tag in item.data.tags | limit(2) %}<span class="tag">{{ tag }}</span>{% endfor %}
-        {% endif %}
-      </div>
-      <div class="row-meta">
-        {% if item.data.verifie %}<span class="row-verif">✅ {{ item.data.date_verif }}</span>{% endif %}
-      </div>
-      <div class="row-actions">
-        {% if item.data.guide %}<a href="{{ item.data.guide }}" class="row-link">guide →</a>{% endif %}
-        <a href="{{ item.data.url }}" class="row-link primary" target="_blank" rel="noopener noreferrer">visiter ↗</a>
-      </div>
-    </div>
-    {% endfor %}
-  </div>
-</section>
-{% endif %}
-
 {# ─── Catégories ─────────────────────────────────────────────────── #}
 <section class="section">
   <div class="section-header">

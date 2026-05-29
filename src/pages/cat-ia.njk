@@ -28,17 +28,22 @@ categorie: ia
       <button class="filter-btn" data-filter="debutant">👶 débutant</button>
       <button class="filter-btn" data-filter="avance">🧠 avancé</button>
       <button class="filter-btn" data-filter="expert">⚡ expert</button>
+      <span class="filter-sep">|</span>
+      <button class="filter-btn" data-starred="true">⭐ indispensables</button>
     </div>
   </div>
 
   <div class="ressource-list" id="ressource-list">
-    {% for item in collections.ressources_ia %}
+    {% for item in collections.ressources_ia | sortStarredFirst %}
     <div class="ressource-row"
          data-title="{{ item.data.title | lower }}"
          data-description="{{ item.data.description | lower }}"
          data-categorie="{{ item.data.categorie }}"
-         data-niveau="{{ item.data.niveau }}">
-      {% if item.data.badges and item.data.badges.length %}
+         data-niveau="{{ item.data.niveau }}"
+         data-starred="{{ item.data.starred }}">
+      {% if item.data.starred %}
+      <span class="row-star" title="Indispensable">⭐</span>
+      {% elif item.data.badges and item.data.badges.length %}
       <span class="row-badge">{{ item.data.badges[0] }}</span>
       {% endif %}
       <div class="row-main">

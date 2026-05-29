@@ -36,14 +36,6 @@ export default function (eleventyConfig) {
     });
   }
 
-  // Ressources starred (indispensables)
-  eleventyConfig.addCollection("ressourcesStarred", (collectionApi) => {
-    return collectionApi
-      .getFilteredByGlob("src/content/ressources/*.md")
-      .filter((item) => !item.data.draft && item.data.starred === true)
-      .sort((a, b) => (a.data.title || "").localeCompare(b.data.title || "", "fr"));
-  });
-
   // Ressources featured
   eleventyConfig.addCollection("ressourcesFeatured", (collectionApi) => {
     return collectionApi
@@ -84,6 +76,11 @@ export default function (eleventyConfig) {
   eleventyConfig.addFilter("niveauClass", (niveau) => {
     const map = { debutant: "niveau-debutant", avance: "niveau-avance", expert: "niveau-expert" };
     return map[niveau] || "";
+  });
+
+  eleventyConfig.addFilter("sortStarredFirst", (arr) => {
+    if (!Array.isArray(arr)) return arr;
+    return [...arr].sort((a, b) => (b.data.starred ? 1 : 0) - (a.data.starred ? 1 : 0));
   });
 
   eleventyConfig.addFilter("categorieLabel", (cat) => {
