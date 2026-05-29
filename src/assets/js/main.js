@@ -70,29 +70,45 @@ function initFilters() {
   const noResults = document.querySelector(".no-results");
   const searchInput = document.getElementById("search-input");
 
+  // Starred filter button
+  const starredBtns = document.querySelectorAll(".filter-btn[data-starred]");
+  let activeStarred = false;
+
+  starredBtns.forEach((btn) => {
+    btn.addEventListener("click", () => {
+      activeStarred = !activeStarred;
+      btn.classList.toggle("active", activeStarred);
+      applyAllFilters();
+    });
+  });
+
+  function applyAllFilters() {
+    const activeNiveau = document.querySelector(".filter-btn[data-filter].active")?.dataset.filter || "all";
+    const q = searchInput ? searchInput.value.toLowerCase().trim() : "";
+    let visible = 0;
+    rows.forEach((row) => {
+      const niveauMatch = activeNiveau === "all" || row.dataset.niveau === activeNiveau;
+      const starredMatch = !activeStarred || row.dataset.starred === "true";
+      const title = (row.dataset.title || "").toLowerCase();
+      const desc = (row.dataset.description || "").toLowerCase();
+      const searchMatch = !q || title.includes(q) || desc.includes(q);
+      const show = niveauMatch && starredMatch && searchMatch;
+      row.classList.toggle("filter-hidden", !niveauMatch);
+      row.classList.toggle("hidden", !show);
+      if (show) visible++;
+    });
+    if (noResults) noResults.classList.toggle("visible", visible === 0);
+  }
+
   btns.forEach((btn) => {
     btn.addEventListener("click", () => {
       btns.forEach((b) => b.classList.remove("active"));
       btn.classList.add("active");
-
-      const f = btn.dataset.filter;
-      const q = searchInput ? searchInput.value.toLowerCase().trim() : "";
-      let visible = 0;
-
-      rows.forEach((row) => {
-        const niveauMatch = f === "all" || row.dataset.niveau === f;
-        const title = (row.dataset.title || "").toLowerCase();
-        const desc = (row.dataset.description || "").toLowerCase();
-        const searchMatch = !q || title.includes(q) || desc.includes(q);
-        const show = niveauMatch && searchMatch;
-        row.classList.toggle("filter-hidden", !niveauMatch);
-        row.classList.toggle("hidden", !show);
-        if (show) visible++;
-      });
-
-      if (noResults) noResults.classList.toggle("visible", visible === 0);
+      applyAllFilters();
     });
   });
+
+  if (searchInput) searchInput.addEventListener("input", applyAllFilters);
 }
 
 /* ─── Niveau + catégorie filters (guides page) ───────────────── */

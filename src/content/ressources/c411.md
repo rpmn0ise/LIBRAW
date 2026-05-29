@@ -7,5 +7,6 @@ niveau: debutant
 verifie: true
 date_verif: "2026/05"
 featured: true
+starred: false
 draft: false
 ---

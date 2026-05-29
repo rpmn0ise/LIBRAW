@@ -36,6 +36,14 @@ export default function (eleventyConfig) {
     });
   }
 
+  // Ressources starred (indispensables)
+  eleventyConfig.addCollection("ressourcesStarred", (collectionApi) => {
+    return collectionApi
+      .getFilteredByGlob("src/content/ressources/*.md")
+      .filter((item) => !item.data.draft && item.data.starred === true)
+      .sort((a, b) => (a.data.title || "").localeCompare(b.data.title || "", "fr"));
+  });
+
   // Ressources featured
   eleventyConfig.addCollection("ressourcesFeatured", (collectionApi) => {
     return collectionApi

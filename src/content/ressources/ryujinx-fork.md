@@ -12,5 +12,6 @@ niveau: avance
 verifie: true
 date_verif: "04/2026"
 featured: false
+starred: false
 guide: /guides/guide-emulation-switch/
 ---

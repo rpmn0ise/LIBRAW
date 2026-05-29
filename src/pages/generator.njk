@@ -89,6 +89,7 @@ permalink: /generator/
             <div class="check-row">
               <label class="check-label"><input type="checkbox" id="r-verifie" checked /><span>vérifié</span></label>
               <label class="check-label"><input type="checkbox" id="r-featured" /><span>featured</span></label>
+              <label class="check-label"><input type="checkbox" id="r-starred" /><span>⭐ starred</span></label>
               <label class="check-label"><input type="checkbox" id="r-draft" /><span>draft</span></label>
             </div>
           </div>
@@ -263,12 +264,12 @@ permalink: /generator/
   // ─── Build Markdown ───────────────────────────────────────────
   function buildRessource() {
     const title=val('r-title'),desc=val('r-description'),url=val('r-url'),cat=val('r-categorie'),niveau=val('r-niveau'),dateVerif=val('r-date-verif'),verifie=chk('r-verifie'),featured=chk('r-featured'),draft=chk('r-draft');
-    const tags=parseTags(val('r-tags')),badges=parseBadges(val('r-badges')),guide=val('r-guide');
+    const tags=parseTags(val('r-tags')),badges=parseBadges(val('r-badges')),guide=val('r-guide'),starred=chk('r-starred');
     const tagsYaml=tags.length?'\ntags:\n'+tags.map(t=>`  - ${t}`).join('\n'):'';
     const badgesYaml=badges.length?'\nbadges:\n'+badges.map(b=>`  - ${b}`).join('\n'):'';
     const guideYaml=guide?`\nguide: ${guide}`:'';
     const verifYaml=verifie?`\nverifie: true\ndate_verif: "${dateVerif||todayISO().slice(0,7).replace('-','/')}"` :'';
-    return `---\ntitle: "${title||'Titre'}"\ndescription: "${desc||'Description.'}"\nurl: "${url||'https://'}"\ncategorie: ${cat}${tagsYaml}\nniveau: ${niveau}${verifYaml}\nfeatured: ${featured}${badgesYaml}${guideYaml}\ndraft: ${draft}\n---`;
+    return `---\ntitle: "${title||'Titre'}"\ndescription: "${desc||'Description.'}"\nurl: "${url||'https://'}"\ncategorie: ${cat}${tagsYaml}\nniveau: ${niveau}${verifYaml}\nfeatured: ${featured}\nstarred: ${starred}${badgesYaml}${guideYaml}\ndraft: ${draft}\n---`;
   }
 
   function buildGuide() {
@@ -413,7 +414,7 @@ permalink: /generator/
   function populateRessource(fm) {
     setVal('r-title', fm.title||''); setVal('r-description', fm.description||''); setVal('r-url', fm.url||'');
     setSel('r-categorie', fm.categorie); setSel('r-niveau', fm.niveau); setVal('r-date-verif', fm.date_verif||'');
-    setChk('r-verifie', fm.verifie!==undefined?fm.verifie:true); setChk('r-featured', !!fm.featured); setChk('r-draft', !!fm.draft);
+    setChk('r-verifie', fm.verifie!==undefined?fm.verifie:true); setChk('r-featured', !!fm.featured); setChk('r-starred', !!fm.starred); setChk('r-draft', !!fm.draft);
     setVal('r-tags', Array.isArray(fm.tags)?fm.tags.join(', '):(fm.tags||''));
     setVal('r-badges', Array.isArray(fm.badges)?fm.badges.join(' '):(fm.badges||''));
     setVal('r-guide', fm.guide||'');

@@ -7,5 +7,6 @@ niveau: intermediaire
 verifie: true
 date_verif: "2026/05"
 featured: false
+starred: false
 draft: false
 ---

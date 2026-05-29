@@ -12,5 +12,6 @@ niveau: debutant
 verifie: true
 date_verif: "04/2026"
 featured: true
+starred: false
 guide: /guides/guide-yt-dlp/
 ---
